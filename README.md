@@ -1,6 +1,6 @@
-# Ops Dashboard v1.2
+# Pulse v1.2
 
-Zero-cost operations dashboard built with:
+Pulse is a zero-cost operations dashboard built with:
 
 - `docs/`: GitHub Pages frontend
 - `gas/`: Google Apps Script backend
