@@ -36,7 +36,7 @@ var UserRepository = (function(){
       userId: matchIdx_(header, ["userId","account","id","\uACC4\uC815","\uC811\uC18D\uAD8C\uD55C\uACC4\uC815","\uC544\uC774\uB514","\uC2F1\uAE00\uC544\uC774\uB514"]),
       password: matchIdx_(header, ["password","pw","\uBE44\uBC00\uBC88\uD638","\uAC1C\uC778\uBE44\uBC00\uBC88\uD638"]),
       displayName: matchIdx_(header, ["displayName","name","\uC774\uB984","\uC131\uBA85","\uD45C\uC2DC\uC774\uB984"]),
-      role: matchIdx_(header, ["role","grade","\uAD8C\uD55C","\uB4F1\uAE09"]),
+      role: matchIdx_(header, ["role","grade","\uAD8C\uD55C","\uB4F1\uAE09","\uAD8C\uD55C\uB4F1\uAE09"]),
       enabled: matchIdx_(header, ["enabled","active","\uC0AC\uC6A9\uC5EC\uBD80","\uD65C\uC131"]),
       note: matchIdx_(header, ["note","\uBE44\uACE0"])
     };
