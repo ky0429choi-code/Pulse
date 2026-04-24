@@ -9,6 +9,7 @@ import { renderReference } from "./modules/reference.js";
 import { getState, setState, subscribe } from "./store.js";
 import { getStoredSession, storeSession, clearStoredSession } from "./auth/session.js";
 import { escapeHtml } from "./components/ui.js";
+import { CONFIG } from "./config.js";
 
 function todayISO(){
   const d = new Date();
@@ -31,10 +32,13 @@ function wireAuthUi_(){
   const dateInput = document.getElementById("dateInput");
   const siteSelect = document.getElementById("siteSelect");
   const loginBtn = document.getElementById("loginBtn");
+  const loginIdEl = document.getElementById("loginId");
   const passwordEl = document.getElementById("loginPassword");
+  const rememberEl = document.getElementById("rememberLoginId");
   const logoutBtn = document.getElementById("logoutBtn");
 
   dateInput.value = todayISO();
+  restoreRememberedLoginId_(loginIdEl, rememberEl);
   siteSelect.addEventListener("change", ()=> setState({ siteId: siteSelect.value }));
   dateInput.addEventListener("change", ()=> setState({ date: dateInput.value }));
   loginBtn?.addEventListener("click", submitLogin_);
@@ -42,6 +46,36 @@ function wireAuthUi_(){
     if (event.key === "Enter") submitLogin_();
   });
   logoutBtn?.addEventListener("click", logout_);
+}
+
+function restoreRememberedLoginId_(loginIdEl, rememberEl){
+  try {
+    const remembered = localStorage.getItem(CONFIG.REMEMBER_LOGIN_ID_KEY) || "";
+    if (remembered && loginIdEl) loginIdEl.value = remembered;
+    if (rememberEl) rememberEl.checked = !!remembered;
+  } catch (err) {
+    // localStorage can be blocked; login still works without remembering the id.
+  }
+}
+
+function normalizeLoginIdInput_(value){
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/@samsung\.com$/i, "");
+}
+
+function syncRememberedLoginId_(userId){
+  const rememberEl = document.getElementById("rememberLoginId");
+  try {
+    if (rememberEl?.checked) {
+      localStorage.setItem(CONFIG.REMEMBER_LOGIN_ID_KEY, userId);
+    } else {
+      localStorage.removeItem(CONFIG.REMEMBER_LOGIN_ID_KEY);
+    }
+  } catch (err) {
+    // ignore storage errors
+  }
 }
 
 async function restoreSession_(){
@@ -64,7 +98,7 @@ async function restoreSession_(){
 async function submitLogin_(){
   const btn = document.getElementById("loginBtn");
   const error = document.getElementById("loginError");
-  const userId = document.getElementById("loginId").value.trim();
+  const userId = normalizeLoginIdInput_(document.getElementById("loginId").value);
   const password = document.getElementById("loginPassword").value;
 
   error.textContent = "";
@@ -81,6 +115,7 @@ async function submitLogin_(){
   try {
     const res = await apiPost("login", { userId, password });
     if (!res?.success) throw new Error(res?.message || "Login failed");
+    syncRememberedLoginId_(userId);
     storeSession(res.data);
     await completeLogin_(res.data.user, res.data.expiresAt);
     document.getElementById("loginPassword").value = "";

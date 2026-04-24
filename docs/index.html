@@ -21,7 +21,10 @@
       <div class="login-grid">
         <label class="field">
           <span>Single ID</span>
-          <input id="loginId" class="input" type="text" autocomplete="username" placeholder="single id" />
+          <div class="login-id-wrap">
+            <input id="loginId" class="input login-id-input" type="text" autocomplete="username" placeholder="single id" />
+            <div class="login-id-suffix">@samsung.com</div>
+          </div>
         </label>
         <label class="field">
           <span>Password</span>
@@ -29,6 +32,10 @@
         </label>
       </div>
 
+      <label class="login-save">
+        <input id="rememberLoginId" type="checkbox" />
+        <span>아이디 저장</span>
+      </label>
       <button class="btn btn-hero" id="loginBtn" style="width:100%">Login</button>
       <div class="login-error" id="loginError"></div>
       <div class="login-note">Watermark and session-based access logs are enabled for this workspace.</div>
