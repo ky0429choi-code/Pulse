@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>업무 대시보드</title>
+<style>
+:root{
+  --bg:#0a0f1e;--surface:#111827;--card:rgba(17,24,39,.9);
+  --border:rgba(148,163,184,.08);--border-h:rgba(56,189,248,.22);
+  --acc:#38bdf8;--acc2:#818cf8;--acc3:#a78bfa;
+  --ok:#34d399;--warn:#fbbf24;--err:#f87171;
+  --tx:#f1f5f9;--muted:#64748b;--dim:#475569;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI','Malgun Gothic',sans-serif;min-height:100vh}
+input,textarea,select,button{font-family:inherit}
+/* ── 헤더 ── */
+header{background:rgba(10,15,30,.95);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(20px);position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:900;letter-spacing:-.5px;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;margin-right:4px}
+.tab-row{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex:1}
+.tab-row::-webkit-scrollbar{display:none}
+.tab{padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);background:rgba(255,255,255,.02);color:var(--muted);font-size:12px;font-weight:800;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab:hover{border-color:var(--acc);color:var(--tx)}
+.tab.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent}
+/* ── 메인 ── */
+main{padding:18px 20px;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+/* ── 카드 ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.card-hdr{padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between}
+.card-hdr h2{font-size:13px;font-weight:900;color:var(--acc);letter-spacing:.2px}
+.card-body{padding:0 18px 16px}
+/* ── 템플릿 그리드 ── */
+.tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+@media(max-width:480px){.tpl-grid{grid-template-columns:1fr}}
+.tpl{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .2s;text-align:left;width:100%}
+.tpl:hover{border-color:var(--border-h);background:rgba(56,189,248,.04)}
+.tpl-ic{font-size:15px;flex-shrink:0;margin-top:1px}
+.tpl-info{flex:1;min-width:0}
+.tpl-label{font-size:12px;font-weight:800;color:var(--tx);display:block;margin-bottom:2px}
+.tpl-sub{font-size:10px;color:var(--muted);line-height:1.4;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;font-size:12px;font-weight:800;padding:8px 20px;border-radius:99px;pointer-events:none;opacity:0;transition:opacity .25s;z-index:999;white-space:nowrap}
+.copy-toast.show{opacity:1}
+/* ── 계산기 ── */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.calc-grid{grid-template-columns:1fr}}
+.calc-box{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.calc-box h3{font-size:11px;font-weight:800;color:var(--acc2);margin-bottom:10px;letter-spacing:.3px}
+.ff{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.ff label{font-size:10px;color:var(--muted);font-weight:700}
+.ff input,.ff select{padding:7px 10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--tx);font-size:13px;font-weight:700;outline:none;transition:border-color .2s}
+.ff input:focus,.ff select:focus{border-color:var(--acc)}
+.calc-result{background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(129,140,248,.05));border:1px solid rgba(56,189,248,.15);border-radius:8px;padding:10px 12px;margin-top:4px;font-size:13px;font-weight:900;color:var(--acc);min-height:36px;line-height:1.5}
+.calc-result span{color:var(--muted);font-size:10px;font-weight:700}
+.calc-btn{width:100%;height:34px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;font-size:12px;font-weight:800;cursor:pointer;margin-top:6px;transition:all .2s}
+.calc-btn:hover{opacity:.85}
+/* ── 메모 ── */
+.memo-area{width:100%;min-height:100px;padding:11px 13px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:var(--r);color:var(--tx);font-size:13px;line-height:1.7;resize:vertical;outline:none;transition:border-color .2s}
+.memo-area:focus{border-color:var(--acc)}
+.memo-area::placeholder{color:var(--dim)}
+.memo-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.memo-label{font-size:10px;color:var(--dim);font-weight:700}
+.memo-save{padding:4px 12px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--muted);font-size:10px;font-weight:800;cursor:pointer;transition:all .2s}
+.memo-save:hover{border-color:var(--ok);color:var(--ok)}
+.memo-saved{color:var(--ok);font-size:10px;font-weight:800;opacity:0;transition:opacity .3s}
+/* ── 레퍼런스 테이블 ── */
+.ref-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.ref-tbl th{padding:8px 10px;text-align:left;color:var(--muted);font-size:10px;font-weight:800;border-bottom:1px solid var(--border);background:rgba(255,255,255,.01);text-transform:uppercase;letter-spacing:.4px}
+.ref-tbl td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.03);font-weight:700;vertical-align:top}
+.ref-tbl td:first-child{color:var(--acc);font-weight:800;white-space:nowrap}
+.ref-tbl tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:800}
+.badge.ok{background:rgba(52,211,153,.1);color:var(--ok)}
+.badge.warn{background:rgba(251,191,36,.1);color:var(--warn)}
+.badge.err{background:rgba(248,113,113,.1);color:var(--err)}
+/* ── 탭 패널 ── */
+.panel{display:none}.panel.on{display:flex;flex-direction:column;gap:16px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OP</div>
+  <div class="tab-row" id="tabs">
+    <button class="tab on" data-p="template" onclick="switchTab(this,'template')">📋 템플릿</button>
+    <button class="tab" data-p="calc"     onclick="switchTab(this,'calc')">🧮 계산기</button>
+    <button class="tab" data-p="ref"      onclick="switchTab(this,'ref')">📖 레퍼런스</button>
+    <button class="tab" data-p="memo"     onclick="switchTab(this,'memo')">📝 메모</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ════ 템플릿 탭 ════ -->
+<div class="panel on" id="p-template">
+
+  <div class="card">
+    <div class="card-hdr"><h2>🍽️ 메뉴 기획</h2></div>
+    <div class="card-body">
+      <div class="tpl-grid" id="g-menu"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><h2>📊 실적 분석 · 보고</h2></div>
+    <div class="card-body">
+      <div class="tpl-grid" id="g-report"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><h2>📣 기획 · 운영</h2></div>
+    <div class="card-body">
+      <div class="tpl-grid" id="g-ops"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════ 계산기 탭 ════ -->
+<div class="panel" id="p-calc">
+
+  <div class="card">
+    <div class="card-hdr"><h2>🧮 빠른 계산기</h2></div>
+    <div class="card-body">
+      <div class="calc-grid">
+
+        <!-- 회전율 -->
+        <div class="calc-box">
+          <h3>🔄 회전율</h3>
+          <div class="ff"><label>중식 DI 식수</label><input type="number" id="c-di" placeholder="350" oninput="calcRotation()"></div>
+          <div class="ff"><label>중식 TO 식수</label><input type="number" id="c-to" placeholder="80" oninput="calcRotation()"></div>
+          <div class="ff"><label>좌석 수</label><input type="number" id="c-seat" placeholder="120" oninput="calcRotation()"></div>
+          <div class="ff"><label>TO 코너 수</label><input type="number" id="c-tocorner" placeholder="2" oninput="calcRotation()"></div>
+          <div class="calc-result" id="r-rotation"><span>값 입력 후 자동 계산</span></div>
+        </div>
+
+        <!-- 인시당 식수 -->
+        <div class="calc-box">
+          <h3>👤 인시당 식수</h3>
+          <div class="ff"><label>끼니</label>
+            <select id="c-meal" onchange="calcPerStaff()">
+              <option>조식</option><option selected>중식</option><option>석식</option><option>야식</option>
+            </select>
+          </div>
+          <div class="ff"><label>총 식수 (DI+TO)</label><input type="number" id="c-total" placeholder="430" oninput="calcPerStaff()"></div>
+          <div class="ff"><label>투입 인원</label><input type="number" id="c-staff" placeholder="6" oninput="calcPerStaff()"></div>
+          <div class="calc-result" id="r-perstaff"><span>값 입력 후 자동 계산</span></div>
+        </div>
+
+        <!-- 발주량 계산 -->
+        <div class="calc-box">
+          <h3>📦 발주량 (1인분 기준)</h3>
+          <div class="ff"><label>예상 식수</label><input type="number" id="c-headcount" placeholder="350" oninput="calcOrder()"></div>
+          <div class="ff"><label>1인 중량 (g)</label><input type="number" id="c-gram" placeholder="150" oninput="calcOrder()"></div>
+          <div class="ff"><label>손질 수율 (%)</label><input type="number" id="c-yield" placeholder="85" oninput="calcOrder()"></div>
+          <div class="calc-result" id="r-order"><span>값 입력 후 자동 계산</span></div>
+        </div>
+
+        <!-- 재료비율 -->
+        <div class="calc-box">
+          <h3>💰 재료비율</h3>
+          <div class="ff"><label>총 매출 (원)</label><input type="number" id="c-sales" placeholder="2800000" oninput="calcFoodCost()"></div>
+          <div class="ff"><label>식재료비 (원)</label><input type="number" id="c-foodcost" placeholder="870000" oninput="calcFoodCost()"></div>
+          <div class="ff"><label>목표 재료비율 (%)</label><input type="number" id="c-target" placeholder="31" oninput="calcFoodCost()"></div>
+          <div class="calc-result" id="r-foodcost"><span>값 입력 후 자동 계산</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════ 레퍼런스 탭 ════ -->
+<div class="panel" id="p-ref">
+
+  <div class="card">
+    <div class="card-hdr"><h2>💰 단가 기준표</h2></div>
+    <div class="card-body">
+      <table class="ref-tbl">
+        <thead><tr><th>항목</th><th>기준</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td>기본 단가</td><td>7,800원</td><td><span class="badge ok">기준</span></td></tr>
+          <tr><td>삼겹살류</td><td>최대 200g 편성</td><td><span class="badge warn">상한</span></td></tr>
+          <tr><td>주말 지원금</td><td>중·석·야식 각 3,500원</td><td>면역력(중/야) 1,000원 별도</td></tr>
+          <tr><td>야식포차</td><td>2,400원</td><td>주말 야간 포함</td></tr>
+          <tr><td>건강지원금</td><td>2,500원</td><td>주말 조·석·야식</td></tr>
+          <tr><td>그린데이(21일)</td><td>4,000원</td><td>중식 T/I</td></tr>
+          <tr><td>그린미트(월·수·금)</td><td>2,000원</td><td>중식</td></tr>
+          <tr><td>선택식(조식 아메 등)</td><td>500원</td><td>석식 코너 등</td></tr>
+          <tr><td>브랜드 콜라보</td><td>3,000원</td><td>월 1회</td></tr>
+          <tr><td>특수김치(월·수)</td><td>50% 지원</td><td></td></tr>
+          <tr><td>DS가든</td><td>야간만 1,200원</td><td>우유·디톡스워터·샐러드</td></tr>
+          <tr><td>11주차~ 정산조정</td><td>1,500원</td><td><span class="badge warn">진행 중</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><h2>🔄 회전율 판정 기준</h2></div>
+    <div class="card-body">
+      <table class="ref-tbl">
+        <thead><tr><th>구간</th><th>판정</th><th>권장 조치</th></tr></thead>
+        <tbody>
+          <tr><td>3.5회 이상</td><td><span class="badge err">🔴 과부하</span></td><td>T/O 비율 확대, 코너 증설 검토</td></tr>
+          <tr><td>2.5~3.4회</td><td><span class="badge warn">🟡 주의</span></td><td>운영 모니터링 강화</td></tr>
+          <tr><td>2.5회 미만</td><td><span class="badge ok">🟢 양호</span></td><td>현행 유지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><h2>👤 업무강도 기준</h2></div>
+    <div class="card-body">
+      <table class="ref-tbl">
+        <thead><tr><th>구간 (식/인)</th><th>판정</th><th>조치</th></tr></thead>
+        <tbody>
+          <tr><td>95 이상</td><td><span class="badge err">🔴 과부하</span></td><td>인원 충원 또는 품목수 축소</td></tr>
+          <tr><td>80~94</td><td><span class="badge warn">🟡 주의</span></td><td>모니터링, 지원 인력 대기</td></tr>
+          <tr><td>80 미만</td><td><span class="badge ok">🟢 양호</span></td><td>현행 유지</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr"><h2>🥗 춘천 닭갈비 양념 레시피</h2></div>
+    <div class="card-body">
+      <table class="ref-tbl">
+        <thead><tr><th>재료</th><th>분량</th></tr></thead>
+        <tbody>
+          <tr><td>고추장</td><td>120g</td></tr>
+          <tr><td>고춧가루</td><td>40g</td></tr>
+          <tr><td>간장</td><td>40g</td></tr>
+          <tr><td>설탕</td><td>35g</td></tr>
+          <tr><td>물엿</td><td>30g</td></tr>
+          <tr><td>맛술</td><td>40g</td></tr>
+          <tr><td>다진마늘</td><td>50g</td></tr>
+          <tr><td>생강즙</td><td>5g</td></tr>
+          <tr><td>후추</td><td>2g</td></tr>
+          <tr><td>참기름</td><td>10g</td></tr>
+          <tr><td>카레가루</td><td>3g</td></tr>
+          <tr><td>쌈장</td><td>25g</td></tr>
+          <tr><td>미원</td><td>2g</td></tr>
+          <tr><td>굴소스</td><td>12g</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════ 메모 탭 ════ -->
+<div class="panel" id="p-memo">
+  <div class="card">
+    <div class="card-hdr">
+      <h2>📝 업무 메모</h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="memo-saved" id="memo-saved">저장됨 ✓</span>
+        <button class="memo-save" onclick="saveMemo()">저장</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="memo-bar">
+        <span class="memo-label">로컬 저장 · 새로고침 후에도 유지</span>
+      </div>
+      <textarea class="memo-area" id="memo-txt" placeholder="특이사항, 발주 메모, 기획 아이디어 등 자유롭게 입력..."></textarea>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- 복사 토스트 -->
+<div class="copy-toast" id="toast">📋 클립보드에 복사됨</div>
+
+<script>
+/* ================================================================
+   LAYER 0 — CONFIG  (내용 수정만 여기서)
+================================================================ */
+const TPL = {
+  menu: [
+    { ic:'🗓️', lb:'주간 메뉴 초안',       sub:'월~금 5일치 중식',
+      txt:`[주간 중식 메뉴 초안 — 단가 7,800원 기준]\n\n월: \n화: \n수: \n목: \n금: \n\n※ 삼겹살류 1회 이내, 건강 메뉴 2회 이상` },
+    { ic:'🥗', lb:'건강 메뉴 기획',        sub:'그린데이·면역력 메뉴',
+      txt:`[건강 특화 메뉴 기획]\n\n그린데이(21일) 중식 T/I:\n  - 메인:\n  - 사이드:\n  - 음료:\n\n면역력 강화 메뉴:\n  - 재료 포인트:\n  - 원가 검토:` },
+    { ic:'🎉', lb:'시즌 프로모션 메뉴',    sub:'테마·특식 기획',
+      txt:`[시즌 프로모션 메뉴 기획]\n\n테마:\n기간:\n\n특별 메뉴 3종:\n  1.\n  2.\n  3.\n\n예상 원가:\n홍보 포인트:` },
+    { ic:'🍱', lb:'T/O 메뉴 구성',        sub:'테이크아웃 코너 기획',
+      txt:`[T/O 코너 메뉴 구성안]\n\n코너 수: __개\n\n메뉴 구성:\n  - 메인 (도시락형):\n  - 사이드:\n  - 음료/디저트:\n\n예상 T/O 비율: __%` },
+    { ic:'🌱', lb:'비건·채식 메뉴',        sub:'다양성 확보',
+      txt:`[채식/비건 메뉴 기획]\n\n대상 끼니:\n\n메뉴:\n  - 단백질 대체재:\n  - 조리법:\n  - 예상 단가:\n\n안내 표기 방법:` },
+    { ic:'🍳', lb:'팝업 코너 기획',        sub:'특화 코너 운영안',
+      txt:`[팝업 코너 기획안]\n\n코너명:\n운영 기간:\n\n제공 메뉴:\n투입 인력: __명\n예상 식수: __명/일\n필요 장비:` },
+  ],
+  report: [
+    { ic:'📈', lb:'월간 식수 보고',         sub:'증감 원인·개선안',
+      txt:`[월간 식수 현황 보고]\n\n기준월:\n사업장:\n\n▸ 중식 일평균: ____식 (전월 대비 ___%)\n▸ 조업일수: __일\n▸ 최고: ____식 / 최저: ____식\n\n특이사항:\n원인 분석:\n개선 방안:` },
+    { ic:'🔄', lb:'회전율 분석 보고',       sub:'T/O포함·제외 비교',
+      txt:`[회전율 분석 보고]\n\n사업장:\n기준일:\n\n▸ DI 식수: ____명\n▸ TO 식수: ____명\n▸ 좌석 수: ____석\n▸ 회전율(DI만): ____회\n▸ 회전율(TO포함): ____회\n\n판정:\n조치 사항:` },
+    { ic:'💰', lb:'재료비 분석 보고',       sub:'목표 대비 실적',
+      txt:`[재료비 분석 보고]\n\n기간:\n사업장:\n\n▸ 목표 재료비율: ___%\n▸ 실제 재료비율: ___%\n▸ 편차: +/-___%\n\n주요 원인:\n  - 식재료 가격 변동:\n  - 식수 변화 영향:\n개선 계획:` },
+    { ic:'📋', lb:'품평회 기획안',          sub:'분기 메뉴 품평회',
+      txt:`[분기별 메뉴 품평회 운영안]\n\n일시:\n장소:\n참석자:\n\n평가 메뉴 (3~5종):\n  1.\n  2.\n  3.\n\n평가 기준: 맛·외관·위생·가성비\n준비 사항:\n결과 보고 방법:` },
+  ],
+  ops: [
+    { ic:'🚚', lb:'케이터링 제안서 (A안)',  sub:'기본 구성',
+      txt:`[케이터링 서비스 제안서 — A안 (기본)]\n\n대상:\n일시:\n예상 인원: ____명\n\n메뉴 구성 (1인 기준):\n  - 메인:\n  - 사이드 2종:\n  - 음료:\n\n단가: ____원/인\n총 견적: ____원\n포함 서비스: 배송·세팅·철수` },
+    { ic:'🚚', lb:'케이터링 제안서 (B안)',  sub:'프리미엄 구성',
+      txt:`[케이터링 서비스 제안서 — B안 (프리미엄)]\n\n대상:\n일시:\n예상 인원: ____명\n\n메뉴 구성 (1인 기준):\n  - 메인 2종:\n  - 사이드 3종:\n  - 디저트:\n  - 음료:\n\n단가: ____원/인\n총 견적: ____원\n포함 서비스: 배송·세팅·전담 서빙·철수` },
+    { ic:'📅', lb:'행사 운영 체크리스트',   sub:'사전·당일·사후',
+      txt:`[행사 식음 운영 체크리스트]\n\n▸ 사전 (D-3)\n  □ 메뉴·수량 확정\n  □ 식재료 발주\n  □ 장비·용기 확인\n\n▸ 당일 (D-Day)\n  □ 조리 완료 시간:\n  □ 세팅 완료 시간:\n  □ 담당자 배치:\n\n▸ 사후\n  □ 잔식 처리\n  □ 결과 보고` },
+    { ic:'📧', lb:'부서 협조 공문',         sub:'행사·점검 요청',
+      txt:`수신: ___팀 ___님\n발신: DS 총무그룹 급식운영팀\n제목: [협조 요청] ___\n\n안녕하세요.\n급식운영팀 ___(___@samsung.com)입니다.\n\n아래와 같이 협조를 요청드립니다.\n\n▸ 목적:\n▸ 일시:\n▸ 장소:\n▸ 요청 사항:\n\n검토 후 회신 부탁드립니다.\n감사합니다.` },
+  ]
+};
+
+/* ================================================================
+   LAYER 1 — STATE
+================================================================ */
+const STATE = {
+  tab: 'template',
+  memo: localStorage.getItem('ws_memo') || ''
+};
+
+/* ================================================================
+   LAYER 2 — TEMPLATES
+================================================================ */
+function makeTplBtn(t, groupId) {
+  return `<button class="tpl" onclick="copyTpl(${JSON.stringify(t.txt)})">
+    <span class="tpl-ic">${t.ic}</span>
+    <span class="tpl-info">
+      <span class="tpl-label">${t.lb}</span>
+      <span class="tpl-sub">${t.sub}</span>
+    </span>
+  </button>`;
+}
+
+/* ================================================================
+   LAYER 3 — (API 없음 — 오프라인 전용)
+================================================================ */
+
+/* ================================================================
+   LAYER 4 — HANDLERS
+================================================================ */
+function switchTab(btn, panelId) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('p-' + panelId).classList.add('on');
+  STATE.tab = panelId;
+}
+
+function copyTpl(txt) {
+  navigator.clipboard.writeText(txt).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function saveMemo() {
+  const val = document.getElementById('memo-txt').value;
+  localStorage.setItem('ws_memo', val);
+  STATE.memo = val;
+  const el = document.getElementById('memo-saved');
+  el.style.opacity = '1';
+  setTimeout(() => el.style.opacity = '0', 1500);
+}
+
+/* ── 계산기 핸들러 ── */
+function n(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+function setR(id, html) { document.getElementById(id).innerHTML = html; }
+
+function calcRotation() {
+  const di = n('c-di'), to = n('c-to'), seat = n('c-seat'), toc = n('c-tocorner') || 1;
+  if(!seat) return;
+  const re = (di / seat).toFixed(2);
+  const ri = ((di + to / toc) / seat).toFixed(2);
+  const col = ri >= 3.5 ? 'var(--err)' : ri >= 2.5 ? 'var(--warn)' : 'var(--ok)';
+  const badge = ri >= 3.5 ? '🔴 과부하' : ri >= 2.5 ? '🟡 주의' : '🟢 양호';
+  setR('r-rotation', `DI전용 <b>${re}</b>회 &nbsp;|&nbsp; T/O포함 <b style="color:${col}">${ri}</b>회 &nbsp;<span style="color:${col}">${badge}</span>`);
+}
+
+function calcPerStaff() {
+  const tot = n('c-total'), staff = n('c-staff');
+  if(!staff) return;
+  const ps = (tot / staff).toFixed(1);
+  const col = ps >= 95 ? 'var(--err)' : ps >= 80 ? 'var(--warn)' : 'var(--ok)';
+  const badge = ps >= 95 ? '🔴 과부하' : ps >= 80 ? '🟡 주의' : '🟢 양호';
+  setR('r-perstaff', `인시당 <b style="color:${col}">${ps}식/인</b> &nbsp;<span style="color:${col}">${badge}</span>`);
+}
+
+function calcOrder() {
+  const hc = n('c-headcount'), g = n('c-gram'), y = n('c-yield') || 100;
+  if(!hc || !g) return;
+  const raw = hc * g / (y / 100);
+  const kg  = (raw / 1000).toFixed(2);
+  setR('r-order', `필요량 <b>${Math.ceil(raw).toLocaleString()}g</b> <span>(${kg}kg)</span><br><span>수율 ${y}% 적용 · 1인 ${g}g 기준</span>`);
+}
+
+function calcFoodCost() {
+  const sales = n('c-sales'), fc = n('c-foodcost'), target = n('c-target');
+  if(!sales) return;
+  const rate = (fc / sales * 100).toFixed(1);
+  const diff = target ? (parseFloat(rate) - target).toFixed(1) : null;
+  const col  = diff === null ? 'var(--acc)' : diff > 0 ? 'var(--err)' : 'var(--ok)';
+  const note = diff === null ? '' : ` &nbsp;<span style="color:${col}">${diff > 0 ? '▲' : '▼'}${Math.abs(diff)}%p (목표 ${target}%)</span>`;
+  setR('r-foodcost', `재료비율 <b style="color:${col}">${rate}%</b>${note}`);
+}
+
+/* ================================================================
+   LAYER 5 — RENDER
+================================================================ */
+function renderTemplates() {
+  document.getElementById('g-menu').innerHTML   = TPL.menu.map(t => makeTplBtn(t)).join('');
+  document.getElementById('g-report').innerHTML = TPL.report.map(t => makeTplBtn(t)).join('');
+  document.getElementById('g-ops').innerHTML    = TPL.ops.map(t => makeTplBtn(t)).join('');
+}
+
+/* ================================================================
+   LAYER 6 — INIT
+================================================================ */
+(function INIT() {
+  renderTemplates();
+  document.getElementById('memo-txt').value = STATE.memo;
+  /* 메모 자동 저장 (1.5초 디바운스) */
+  let _timer;
+  document.getElementById('memo-txt').addEventListener('input', () => {
+    clearTimeout(_timer);
+    _timer = setTimeout(saveMemo, 1500);
+  });
+})();
+</script>
+</body>
+</html>

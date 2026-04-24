@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ops Dashboard</title>
+  <link rel="stylesheet" href="./assets/css/base.css" />
+</head>
+<body>
+  <div class="login-overlay show" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-mark">OP</div>
+        <div>
+          <div class="eyebrow">Operations Console</div>
+          <h1>Secure Ops Dashboard</h1>
+          <p>Authorized users only. Sign in to open protected operating data.</p>
+        </div>
+      </div>
+
+      <div class="login-grid">
+        <label class="field">
+          <span>Single ID</span>
+          <input id="loginId" class="input" type="text" autocomplete="username" placeholder="single id" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="password" />
+        </label>
+      </div>
+
+      <button class="btn btn-hero" id="loginBtn" style="width:100%">Login</button>
+      <div class="login-error" id="loginError"></div>
+      <div class="login-note">Watermark and session-based access logs are enabled for this workspace.</div>
+    </div>
+  </div>
+
+  <div class="watermark-layer" id="watermarkLayer" aria-hidden="true"></div>
+
+  <div class="app-shell app-shell--locked" id="appShell">
+    <header class="topbar">
+      <div class="brand-block">
+        <div class="logo">OP</div>
+        <div>
+          <div class="eyebrow">Operations Console</div>
+          <div class="headline">Ops Dashboard</div>
+        </div>
+      </div>
+
+      <div class="ctrl">
+        <select id="siteSelect" aria-label="Site"></select>
+        <input id="dateInput" type="date" aria-label="Date" />
+      </div>
+
+      <div class="auth-box">
+        <div class="auth-meta">
+          <div class="auth-name" id="userName">-</div>
+          <div class="auth-role" id="userRole">-</div>
+        </div>
+        <button class="btn btn-ghost" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </header>
+
+    <section class="hero-strip">
+      <div class="hero-copy">
+        <div class="eyebrow">Protected Workspace</div>
+        <h2>Fast, high-signal workspace for daily site operations and immediate action.</h2>
+        <p id="sessionHint">Checking the current session.</p>
+      </div>
+      <div class="hero-glow"></div>
+    </section>
+
+    <nav class="tab-row" id="tabs">
+      <button class="tab on" data-tab="dashboard">Dashboard</button>
+      <button class="tab" data-tab="templates">Templates</button>
+      <button class="tab" data-tab="insights">Insights</button>
+      <button class="tab" data-tab="calc">Calc</button>
+      <button class="tab" data-tab="ref">Reference</button>
+      <button class="tab" data-tab="memo">Memo</button>
+    </nav>
+
+    <main>
+      <section class="panel on" id="p-dashboard"></section>
+      <section class="panel" id="p-templates"></section>
+      <section class="panel" id="p-insights"></section>
+      <section class="panel" id="p-calc"></section>
+      <section class="panel" id="p-ref"></section>
+      <section class="panel" id="p-memo"></section>
+    </main>
+  </div>
+
+  <div class="copy-toast" id="toast">Done</div>
+
+  <script type="module" src="./assets/js/app.js"></script>
+</body>
+</html>
