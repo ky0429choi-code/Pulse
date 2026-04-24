@@ -104,8 +104,8 @@ async function submitLogin_(){
   error.textContent = "";
   error.classList.remove("show");
 
-  if (!userId || !password) {
-    error.textContent = "Single ID and password are required.";
+  if (!password) {
+    error.textContent = "Password is required.";
     error.classList.add("show");
     return;
   }
@@ -113,6 +113,17 @@ async function submitLogin_(){
   btn.disabled = true;
   btn.textContent = "Signing in...";
   try {
+    if (password === CONFIG.LOCAL_ENTRY_CODE) {
+      syncRememberedLoginId_(userId);
+      await completeLocalEntry_(userId);
+      document.getElementById("loginPassword").value = "";
+      return;
+    }
+
+    if (!userId) {
+      throw new Error("Single ID is required.");
+    }
+
     const res = await apiPost("login", { userId, password });
     if (!res?.success) throw new Error(res?.message || "Login failed");
     syncRememberedLoginId_(userId);
@@ -126,6 +137,43 @@ async function submitLogin_(){
     btn.disabled = false;
     btn.textContent = "Login";
   }
+}
+
+async function completeLocalEntry_(userId){
+  const user = {
+    userId: userId || "local",
+    displayName: userId || "Local Viewer",
+    role: "LOCAL"
+  };
+  const expiresAt = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString();
+  applyUserUi_(user, expiresAt);
+  applyWatermark_(user);
+  applyLocalConfig_();
+  showApp_();
+}
+
+function applyLocalConfig_(){
+  const cfg = {
+    sites: [
+      { siteId: "H1", siteName: "Site H1" },
+      { siteId: "H2", siteName: "Site H2" }
+    ],
+    defaultSiteId: "H2",
+    featureFlags: {}
+  };
+
+  const siteSelect = document.getElementById("siteSelect");
+  siteSelect.innerHTML = cfg.sites.map((site)=>
+    `<option value="${escapeHtml(site.siteId)}">${escapeHtml(site.siteName)}</option>`
+  ).join("");
+  siteSelect.value = cfg.defaultSiteId;
+
+  setState({
+    appConfig: cfg,
+    siteId: cfg.defaultSiteId,
+    date: document.getElementById("dateInput").value,
+    isReady: true
+  });
 }
 
 async function completeLogin_(user, expiresAt){
