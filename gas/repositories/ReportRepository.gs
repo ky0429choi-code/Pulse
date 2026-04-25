@@ -10,9 +10,15 @@ var ReportRepository = (function () {
     return buildIndexMap_(SHEET, data.headers);
   }
 
+  function _ensure() {
+    var headers = ["reportId", "siteId", "date", "title", "category", "body", "status", "createdAt"];
+    SheetRepo.setHeaderIfEmpty_(SHEET, headers);
+  }
+
   function list_(siteId, opts) {
+    _ensure(); // 시트 존재 및 헤더 보장
     opts = opts || {};
-    var data = readAll_(SHEET);
+    var data = SheetRepo.readAll_(SHEET);
     var idx = _idx(data);
     var rows = data.rows.filter(function (r) {
       if (siteId && String(r[idx.siteId] || "") !== String(siteId)) return false;
