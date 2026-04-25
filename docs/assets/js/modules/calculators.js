@@ -1,5 +1,5 @@
 import { apiPost } from '../services/api.js';
-import { showToast } from '../components/ui.js';
+import { toast } from '../components/toast.js';
 
 export function renderCalculators() {
   const root = document.getElementById("p-calc");
@@ -110,30 +110,30 @@ export function renderCalculators() {
     const itemName = v('c-item'), orderQty = n('c-orderQty'), lossRate = n('c-loss');
     const targetP = n('c-targetp'), reason = v('c-reason');
 
-    if(!itemName || !orderQty || !targetP) return showToast("품목명, 발주량, 1인목표량은 필수입니다.", true);
+    if(!itemName || !orderQty || !targetP) return toast("\uD488\uBAA9\uBA85, \uBC1C\uC8FC\uB7C9, 1\uC778\uBAA9\uD45C\uB7C9\uC740 \uD544\uC218\uC785\uB2C8\uB2E4.");
 
     btn.disabled = true;
-    btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;border-width:2px;"></span> 처리중...`;
+    btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;border-width:2px;"></span> \uCC98\uB9AC\uC911...`;
 
     try {
       const res = await apiPost("calculateYield", { itemName, orderQty, lossRate, targetPerCapita: targetP, reason });
       if(!res.ok) throw new Error(res.message);
 
       setR('r-yield', `
-        <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">[ ${itemName} ] 산출 결과</div>
+        <div style="font-size:0.9rem; color:var(--text-muted); margin-bottom:10px;">[ ${itemName} ] \uC0B0\uCD9C \uACB0\uACFC</div>
         <div style="display:flex; justify-content:space-around;">
-          <div><div style="font-size:0.8rem; color:var(--acc);">실 중량 반입분</div><div style="font-size:1.5rem; font-weight:700; color:#fff;">${res.data.actualWeight} <small style="font-size:0.9rem;">g</small></div></div>
+          <div><div style="font-size:0.8rem; color:var(--acc);">\uC2E4 \uC911\uB7C9 \uBC18\uC785\uBD84</div><div style="font-size:1.5rem; font-weight:700; color:#fff;">${res.data.actualWeight} <small style="font-size:0.9rem;">g</small></div></div>
           <div style="width:1px; background:var(--border);"></div>
-          <div><div style="font-size:0.8rem; color:var(--acc);">실제 식수 제공가능량</div><div style="font-size:1.5rem; font-weight:700; color:var(--ok);">${res.data.servings} <small style="font-size:0.9rem;">명</small></div></div>
+          <div><div style="font-size:0.8rem; color:var(--acc);">\uC2E4\uC81C \uC2DD\uC218 \uC81C\uACF5\uAC00\uB2A5\uB7C9</div><div style="font-size:1.5rem; font-weight:700; color:var(--ok);">${res.data.servings} <small style="font-size:0.9rem;">\uBA85</small></div></div>
         </div>
       `);
-      showToast(res.message);
+      toast(res.message || "\uACC4\uC0B0 \uC644\uB8CC");
       doSearch(itemName); // instant search refresh
     } catch(err) {
-      showToast(err.message, true);
+      toast(err.message || "\uC624\uB958 \uBC1C\uC0DD");
     } finally {
       btn.disabled = false;
-      btn.innerHTML = `🧮 산출 및 서버에 이력 저장`;
+      btn.innerHTML = `\uD83E\uDDEE \uC0B0\uCD9C \uBC0F \uC11C\uBC84\uC5D0 \uC774\uB825 \uC800\uC7A5`;
     }
   };
 
