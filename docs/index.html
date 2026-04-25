@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Pulse</title>
   <link rel="stylesheet" href="./assets/css/base.css" />
+  <script src="./env.js"></script>
 </head>
 <body>
   <div class="login-overlay show" id="loginOverlay">
@@ -12,23 +13,23 @@
       <div class="login-brand">
         <div class="login-mark">OP</div>
         <div>
-          <div class="eyebrow">Operations Console</div>
+          <div class="eyebrow">운영 콘솔</div>
           <h1>Pulse</h1>
-          <p>Authorized users only. Sign in to open protected operating data.</p>
+          <p>인가된 사용자만 접근할 수 있습니다. 보호된 운영 데이터를 열려면 로그인하세요.</p>
         </div>
       </div>
 
       <div class="login-grid">
         <label class="field">
-          <span>Single ID</span>
+          <span>싱글 ID</span>
           <div class="login-id-wrap">
-            <input id="loginId" class="input login-id-input" type="text" autocomplete="username" placeholder="single id" />
+            <input id="loginId" class="input login-id-input" type="text" autocomplete="username" placeholder="싱글 ID를 입력하세요" />
             <div class="login-id-suffix">@samsung.com</div>
           </div>
         </label>
         <label class="field">
-          <span>Password</span>
-          <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="password" />
+          <span>비밀번호</span>
+          <input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="비밀번호" />
         </label>
       </div>
 
@@ -36,9 +37,9 @@
         <input id="rememberLoginId" type="checkbox" />
         <span>아이디 저장</span>
       </label>
-      <button class="btn btn-hero" id="loginBtn" style="width:100%">Login</button>
+      <button class="btn btn-hero" id="loginBtn" style="width:100%">로그인</button>
       <div class="login-error" id="loginError"></div>
-      <div class="login-note">Watermark and session-based access logs are enabled for this workspace.</div>
+      <div class="login-note">이 워크스페이스는 워터마크 및 세션 기반 접속 로그가 기록됩니다.</div>
     </div>
   </div>
 
@@ -49,7 +50,7 @@
       <div class="brand-block">
         <div class="logo">OP</div>
         <div>
-          <div class="eyebrow">Operations Console</div>
+          <div class="eyebrow">운영 콘솔</div>
           <div class="headline">Pulse</div>
         </div>
       </div>
@@ -64,26 +65,26 @@
           <div class="auth-name" id="userName">-</div>
           <div class="auth-role" id="userRole">-</div>
         </div>
-        <button class="btn btn-ghost" id="logoutBtn" type="button">Logout</button>
+        <button class="btn btn-ghost" id="logoutBtn" type="button">로그아웃</button>
       </div>
     </header>
 
     <section class="hero-strip">
       <div class="hero-copy">
-        <div class="eyebrow">Protected Workspace</div>
-        <h2>Fast, high-signal workspace for daily site operations and immediate action.</h2>
-        <p id="sessionHint">Checking the current session.</p>
+        <div class="eyebrow">보호된 워크스페이스</div>
+        <h2>일일 사업장 운영 및 즉각적인 조치를 위한 빠르고 직관적인 워크스페이스입니다.</h2>
+        <p id="sessionHint">현재 세션을 확인 중입니다.</p>
       </div>
       <div class="hero-glow"></div>
     </section>
 
     <nav class="tab-row" id="tabs">
-      <button class="tab on" data-tab="dashboard">Dashboard</button>
-      <button class="tab" data-tab="templates">Templates</button>
-      <button class="tab" data-tab="insights">Insights</button>
-      <button class="tab" data-tab="calc">Calc</button>
-      <button class="tab" data-tab="ref">Reference</button>
-      <button class="tab" data-tab="memo">Memo</button>
+      <button class="tab on" data-tab="dashboard">대시보드</button>
+      <button class="tab" data-tab="templates">템플릿</button>
+      <button class="tab" data-tab="insights">인사이트</button>
+      <button class="tab" data-tab="calc">계산기</button>
+      <button class="tab" data-tab="ref">레퍼런스</button>
+      <button class="tab" data-tab="memo">메모</button>
     </nav>
 
     <main>

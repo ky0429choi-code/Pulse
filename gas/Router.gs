@@ -6,13 +6,13 @@ var Router = (function () {
 
   var SESSION_ACTIONS = {
     logout: { method: "POST", handler: function(req){ return AuthService.logout(req); } },
-    getSession: { method: "GET", handler: function(req){ return AuthService.getSession(req); } },
-    getAppConfig: { method: "GET", handler: function(req){ return AppConfigService.getAppConfig(req); } },
-    getDashboardSummary: { method: "GET", handler: function(req){ return HeadcountService.getDashboardSummary(req); } },
-    getTemplateActions: { method: "GET", handler: function(req){ return TemplateService.getTemplateActions(req); } },
+    getSession: { method: "POST", handler: function(req){ return AuthService.getSession(req); } },
+    getAppConfig: { method: "POST", handler: function(req){ return AppConfigService.getAppConfig(req); } },
+    getDashboardSummary: { method: "POST", handler: function(req){ return HeadcountService.getDashboardSummary(req); } },
+    getTemplateActions: { method: "POST", handler: function(req){ return TemplateService.getTemplateActions(req); } },
     renderTemplate: { method: "POST", handler: function(req){ return TemplateService.renderTemplate(req); } },
-    getMemoList: { method: "GET", handler: function(req){ return MemoService.getMemoList(req); } },
-    getInsights: { method: "GET", handler: function(req){ return InsightService.getInsights(req); } },
+    getMemoList: { method: "POST", handler: function(req){ return MemoService.getMemoList(req); } },
+    getInsights: { method: "POST", handler: function(req){ return InsightService.getInsights(req); } },
     saveMemo: { method: "POST", handler: function(req){ return MemoService.saveMemo(req); } },
     runAudit: { method: "POST", handler: function(req){ return InsightService.runAudit(req); } }
   };
@@ -60,6 +60,11 @@ var Router = (function () {
 
     var methodError = enforceMethod_(action, route.method, method);
     if (methodError) return jsonOut_(methodError);
+
+    if (CONFIG.API_KEY && req.k !== CONFIG.API_KEY) {
+      LogService.log_("WARN", "API", action, "INVALID_API_KEY", null);
+      return jsonOut_(fail_(action, "FORBIDDEN", "Invalid API key"));
+    }
 
     if (SESSION_ACTIONS[action] || ADMIN_ACTIONS[action]) {
       var sessionResult = AuthService.requireSession_(req);

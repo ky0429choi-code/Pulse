@@ -7,7 +7,7 @@ export async function renderTemplates({ siteId, date }){
   root.innerHTML = card("Templates", "<div>Loading...</div>");
 
   try{
-    const res = await apiGet("getTemplateActions", { siteId });
+    const res = await apiPost("getTemplateActions", { siteId });
     if(!res?.success) throw new Error(res?.message || "unknown");
 
     const groups = res.data?.groups || [];
@@ -25,10 +25,19 @@ export async function renderTemplates({ siteId, date }){
         try{
           const out = await apiPost("renderTemplate", { templateId, siteId, date });
           if(!out?.success) throw new Error(out?.message || "renderTemplate failed");
-          await navigator.clipboard.writeText(out.data.content);
+          try {
+            await navigator.clipboard.writeText(out.data.content);
+          } catch(e){
+            const ta = document.createElement("textarea");
+            ta.value = out.data.content;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+          }
           toast("Template copied");
         }catch(err){
-          alert(String(err.message || err));
+          toast(String(err.message || err));
         }
       });
     });

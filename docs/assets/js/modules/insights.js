@@ -1,5 +1,6 @@
 import { apiGet, apiPost } from "../services/api.js";
 import { badge, card, escapeHtml } from "../components/ui.js";
+import { toast } from "../components/toast.js";
 import { getState, setState } from "../store.js";
 
 export async function renderInsights({ siteId }){
@@ -7,7 +8,7 @@ export async function renderInsights({ siteId }){
   root.innerHTML = card("Insights", "<div>Loading...</div>");
 
   try{
-    const res = await apiGet("getInsights", { siteId, period:"14d" });
+    const res = await apiPost("getInsights", { siteId, period:"14d" });
     if(!res?.success) throw new Error(res?.message || "unknown");
 
     const run = res.data?.run || null;
@@ -45,7 +46,7 @@ export async function renderInsights({ siteId }){
         const state = getState();
         setState({ siteId: state.siteId, date: state.date });
       }catch(err){
-        alert(String(err.message || err));
+        toast(String(err.message || err));
       }
     });
   }catch(err){

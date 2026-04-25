@@ -9,7 +9,7 @@ var InsightService = (function(){
       return ok_(action, { siteId:req.siteId, period:req.period || "14d", run: latest.run, items: latest.items }, "");
     }
 
-    var items = quickAudit_(req.siteId, DateUtil.today_());
+    var items = quickAudit_(req.siteId, DateUtil.today_(), req.period || "14d");
     return ok_(action, { siteId:req.siteId, period:req.period || "14d", run: null, items: items }, "no persisted run");
   }
 
@@ -23,7 +23,7 @@ var InsightService = (function(){
     var runAt = DateUtil.nowIso_();
     var scope = req.scope || "recent";
     var period = req.period || "14d";
-    var items = quickAudit_(req.siteId, date);
+    var items = quickAudit_(req.siteId, date, period);
 
     InsightRepository.insertBatch_({ runId: runId, runAt: runAt, siteId:req.siteId, scope: scope, period: period }, items);
     LogService.log_("INFO", "AUDIT", action, "persisted", { runId: runId, siteId: req.siteId, count: items.length });
@@ -48,7 +48,7 @@ var InsightService = (function(){
     return results;
   }
 
-  function quickAudit_(siteId, date){
+  function quickAudit_(siteId, date, period){
     var dash = HeadcountService.getDashboardSummary({ siteId: siteId, date: date });
     if (!dash.success) return [];
 
@@ -103,6 +103,16 @@ var InsightService = (function(){
         message:"\uC804\uC6D4 \uD3C9\uADE0 \uB300\uBE44 " + m + "\uC2DD",
         actionGuide:"\uCD5C\uADFC \uC774\uC288/\uB0A0\uC528/\uBA54\uBAA8 \uBC0F \uC6D0\uC778 \uC810\uAC80"
       });
+    }
+
+    if (period === "30d" && typeof m === "number" && m <= -50) {
+       items.push({
+         level: "err",
+         code: "LONG_TERM_DROP",
+         title: "30\uC77C \uAE30\uC900 \uC2EC\uAC01\uD55C \uC2DD\uC218 \uAC10\uC18C",
+         message: "30\uC77C \uD3C9\uADE0\uB300\uBE44 \uC2EC\uAC01\uD55C \uAE09\uAC10",
+         actionGuide: "\uC804\uBC18\uC801\uC778 \uC6B4\uC601 \uC810\uAC80 \uD544\uC694"
+       });
     }
 
     return items;

@@ -1,0 +1,4 @@
+window.ENV = {
+  API_BASE: "", // ADD YOUR APPS SCRIPT URL HERE
+  API_KEY: "" // ADD YOUR API KEY HERE
+};

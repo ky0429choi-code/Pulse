@@ -1,4 +1,4 @@
-import { apiGet } from "../services/api.js";
+import { apiPost } from "../services/api.js";
 import { cacheGet, cacheSet } from "../services/cache.js";
 import { badge, card, kv, escapeHtml } from "../components/ui.js";
 
@@ -8,7 +8,7 @@ export async function renderDashboard({ siteId, date }){
 
   const cacheKey = `dash:${siteId}:${date}`;
   try{
-    const res = await apiGet("getDashboardSummary", { siteId, date });
+    const res = await apiPost("getDashboardSummary", { siteId, date });
     if(!res?.success) throw new Error(res?.message || "unknown");
     cacheSet(cacheKey, res);
     root.innerHTML = buildDashboard(res.data);

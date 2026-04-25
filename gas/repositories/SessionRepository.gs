@@ -96,14 +96,22 @@ var SessionRepository = (function(){
     var count = 0;
     var now = new Date().getTime();
 
+    if (idx.active < 0) return 0;
+
+    var activeColValues = sh.getRange(2, idx.active + 1, data.rows.length, 1).getValues();
+
     data.rows.forEach(function(row, rowIndex){
       var expiresAt = String(row[idx.expiresAt] || "");
-      var active = String(idx.active >= 0 ? (row[idx.active] || "TRUE") : "TRUE").toUpperCase();
+      var active = String(activeColValues[rowIndex][0]).toUpperCase();
       if (active === "FALSE") return;
       if (!expiresAt || new Date(expiresAt).getTime() > now) return;
-      if (idx.active >= 0) sh.getRange(rowIndex + 2, idx.active + 1).setValue("FALSE");
+      activeColValues[rowIndex][0] = "FALSE";
       count += 1;
     });
+
+    if (count > 0) {
+      sh.getRange(2, idx.active + 1, data.rows.length, 1).setValues(activeColValues);
+    }
 
     return count;
   }

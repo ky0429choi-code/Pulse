@@ -232,7 +232,7 @@ main{padding:18px;max-width:1180px;margin:0 auto;display:flex;flex-direction:col
 }
 .watermark-layer.show{display:grid}
 .watermark-layer span{
-  color:rgba(255,255,255,.055);font-size:18px;font-weight:900;letter-spacing:.08em;
+  color:rgba(255,255,255,.015);font-size:18px;font-weight:900;letter-spacing:.08em;
   text-transform:uppercase;white-space:nowrap
 }
 @media(max-width:980px){
@@ -247,3 +247,13 @@ main{padding:18px;max-width:1180px;margin:0 auto;display:flex;flex-direction:col
   .hero-card,.metric-grid,.compare-grid,.grid2{grid-template-columns:1fr}
   .hero-number{font-size:38px}
 }
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.calc-grid{grid-template-columns:1fr}}
+.calc-box{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.calc-box h3{font-size:11px;font-weight:800;color:var(--acc2);margin-bottom:10px;letter-spacing:.3px}
+.ff{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.ff label{font-size:10px;color:var(--muted);font-weight:700}
+.ff input,.ff select{padding:7px 10px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--tx);font-size:13px;font-weight:700;outline:none;transition:border-color .2s;font-family:inherit;}
+.ff input:focus,.ff select:focus{border-color:var(--acc)}
+.calc-result{background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(129,140,248,.05));border:1px solid rgba(56,189,248,.15);border-radius:8px;padding:10px 12px;margin-top:4px;font-size:13px;font-weight:900;color:var(--acc);min-height:36px;line-height:1.5}
+.calc-result span{color:var(--muted);font-size:10px;font-weight:700}

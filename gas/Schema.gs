@@ -98,7 +98,10 @@ var Schema = (function(){
 
   var FIELDMAP_HEADER = ["sheet","logical","header","enabled","note"];
 
+  var _fieldMapCache = null;
+
   function loadFieldMap_() {
+    if (_fieldMapCache) return _fieldMapCache;
     var name = CONFIG.SHEETS.FIELDMAP;
     var data;
     try { data = SheetRepo.readAll_(name); } catch(e){ return {}; }
@@ -122,7 +125,8 @@ var Schema = (function(){
       if (!map[sh]) map[sh] = {};
       map[sh][lg] = hd;
     });
-    return map;
+    _fieldMapCache = map;
+    return _fieldMapCache;
   }
 
   function buildIndexMap_(sheetName, headerRow) {

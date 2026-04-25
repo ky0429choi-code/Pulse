@@ -86,7 +86,7 @@ async function restoreSession_(){
   }
 
   try {
-    const res = await apiGet("getSession");
+    const res = await apiPost("getSession", {});
     if (!res?.success) throw new Error(res?.message || "Session check failed");
     await completeLogin_(res.data.user, res.data.expiresAt);
   } catch (err) {
@@ -111,13 +111,10 @@ async function submitLogin_(){
   }
 
   btn.disabled = true;
-  btn.textContent = "Signing in...";
+  btn.textContent = "로그인 중...";
   try {
-    if (password === CONFIG.LOCAL_ENTRY_CODE) {
-      syncRememberedLoginId_(userId);
-      await completeLocalEntry_(userId);
-      document.getElementById("loginPassword").value = "";
-      return;
+    if (!window.ENV?.API_BASE) {
+      throw new Error("환경 설정(API_BASE)이 누락되었습니다. env.js를 확인하세요.");
     }
 
     if (!userId) {
@@ -135,45 +132,8 @@ async function submitLogin_(){
     error.classList.add("show");
   } finally {
     btn.disabled = false;
-    btn.textContent = "Login";
+    btn.textContent = "로그인";
   }
-}
-
-async function completeLocalEntry_(userId){
-  const user = {
-    userId: userId || "local",
-    displayName: userId || "Local Viewer",
-    role: "LOCAL"
-  };
-  const expiresAt = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString();
-  applyUserUi_(user, expiresAt);
-  applyWatermark_(user);
-  applyLocalConfig_();
-  showApp_();
-}
-
-function applyLocalConfig_(){
-  const cfg = {
-    sites: [
-      { siteId: "H1", siteName: "Site H1" },
-      { siteId: "H2", siteName: "Site H2" }
-    ],
-    defaultSiteId: "H2",
-    featureFlags: {}
-  };
-
-  const siteSelect = document.getElementById("siteSelect");
-  siteSelect.innerHTML = cfg.sites.map((site)=>
-    `<option value="${escapeHtml(site.siteId)}">${escapeHtml(site.siteName)}</option>`
-  ).join("");
-  siteSelect.value = cfg.defaultSiteId;
-
-  setState({
-    appConfig: cfg,
-    siteId: cfg.defaultSiteId,
-    date: document.getElementById("dateInput").value,
-    isReady: true
-  });
 }
 
 async function completeLogin_(user, expiresAt){
@@ -184,7 +144,7 @@ async function completeLogin_(user, expiresAt){
 }
 
 async function loadConfig_(){
-  const cfg = await apiGet("getAppConfig");
+  const cfg = await apiPost("getAppConfig", {});
   if(!cfg?.success){
     throw new Error("getAppConfig failed: " + (cfg?.message || "unknown"));
   }
@@ -240,7 +200,7 @@ function applyUserUi_(user, expiresAt){
 
   nameEl.textContent = safeUser.displayName || safeUser.userId || "-";
   roleEl.textContent = `${safeUser.role || "USER"} / ${safeUser.userId || "-"}`;
-  hintEl.textContent = `Session active until ${new Date(expiresAt).toLocaleString("ko-KR")}`;
+  hintEl.textContent = `세션 만료: ${new Date(expiresAt).toLocaleString("ko-KR")}`;
 
   setState({ user: safeUser, expiresAt: expiresAt || "" });
 }
@@ -251,7 +211,7 @@ function showLogin_(message = ""){
   document.getElementById("watermarkLayer").classList.remove("show");
 
   const hintEl = document.getElementById("sessionHint");
-  if (hintEl) hintEl.textContent = "Login is required to open protected operating data.";
+  if (hintEl) hintEl.textContent = "보호된 운영 데이터를 보려면 로그인이 필요합니다.";
 
   const error = document.getElementById("loginError");
   error.textContent = message;

@@ -53,15 +53,12 @@ var HeadcountService = (function(){
       headcount: headcount,
       ops: ops,
       kpi: { rotationDi: rotationDi, rotationWithTo: rotationWithTo, mealPerStaff: mealPerStaff },
-      compare: buildCompare_(req.siteId, date),
+      compare: buildCompare_(req.siteId, date, (lunch.di + lunch.to) || 0),
       status: { rotationLevel: rotationLevel, staffLoadLevel: staffLoadLevel }
     }, "");
   }
 
-  function buildCompare_(siteId, date){
-    var todayRows = HeadcountRepository.listBySiteDate_(siteId, date);
-    var todayTotal = lunchTotal_(todayRows);
-
+  function buildCompare_(siteId, date, todayTotal){
     var prev = DateUtil.addDays_(date, -1);
     var prevRows = HeadcountRepository.listBySiteDate_(siteId, prev);
     var prevTotal = lunchTotal_(prevRows);

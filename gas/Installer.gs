@@ -22,18 +22,23 @@ var Installer = (function(){
   function setupTriggers(){
     removeManagedTriggers_();
 
-    ScriptApp.newTrigger("Jobs.runDailyAudit")
+    ScriptApp.newTrigger("globalDailyAudit")
       .timeBased()
       .everyDays(1)
       .atHour(7)
       .nearMinute(30)
       .create();
 
-    ScriptApp.newTrigger("Jobs.runWeeklyAudit")
+    ScriptApp.newTrigger("globalWeeklyAudit")
       .timeBased()
       .onWeekDay(ScriptApp.WeekDay.MONDAY)
       .atHour(7)
       .nearMinute(40)
+      .create();
+
+    ScriptApp.newTrigger("globalCleanSessions")
+      .timeBased()
+      .everyHours(4)
       .create();
 
     LogService.log_("INFO", "INSTALL", "setupTriggers", "created", null);
@@ -42,9 +47,9 @@ var Installer = (function(){
 
   function removeManagedTriggers_(){
     var all = ScriptApp.getProjectTriggers();
+    var fns = ["Jobs.runDailyAudit", "Jobs.runWeeklyAudit", "globalDailyAudit", "globalWeeklyAudit", "globalCleanSessions"];
     all.forEach(function(t){
-      var fn = t.getHandlerFunction();
-      if (fn === "Jobs.runDailyAudit" || fn === "Jobs.runWeeklyAudit") ScriptApp.deleteTrigger(t);
+      if (fns.indexOf(t.getHandlerFunction()) >= 0) ScriptApp.deleteTrigger(t);
     });
   }
 
@@ -125,9 +130,21 @@ var Installer = (function(){
     ]);
 
     if (toAppend.length) {
+      var toAppendRows = [];
+      toAppend.forEach(function(row){
+        var mapped = new Array(data.header.length);
+        if (idx.templateId >= 0) mapped[idx.templateId] = row[0];
+        if (idx.groupId >= 0) mapped[idx.groupId] = row[1];
+        if (idx.label >= 0) mapped[idx.label] = row[2];
+        if (idx.description >= 0) mapped[idx.description] = row[3];
+        if (idx.body >= 0) mapped[idx.body] = row[4];
+        if (idx.enabled >= 0) mapped[idx.enabled] = row[5];
+        if (idx.sort >= 0) mapped[idx.sort] = row[6];
+        toAppendRows.push(mapped);
+      });
       var startRow = sh.getLastRow() + 1;
-      sh.getRange(startRow, 1, toAppend.length, toAppend[0].length).setValues(toAppend);
-      LogService.log_("INFO", "INSTALL", "ensureTemplates", "appended", { count: toAppend.length });
+      sh.getRange(startRow, 1, toAppendRows.length, toAppendRows[0].length).setValues(toAppendRows);
+      LogService.log_("INFO", "INSTALL", "ensureTemplates", "appended", { count: toAppendRows.length });
     }
   }
 

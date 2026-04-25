@@ -18,3 +18,14 @@ var Jobs = (function(){
 
   return { runDailyAudit: runDailyAudit, runWeeklyAudit: runWeeklyAudit };
 })();
+
+function globalDailyAudit() {
+  Jobs.runDailyAudit();
+}
+function globalWeeklyAudit() {
+  Jobs.runWeeklyAudit();
+}
+function globalCleanSessions() {
+  var count = SessionRepository.deactivateExpired_();
+  LogService.log_("INFO", "TRIGGER", "globalCleanSessions", "done", { expiredCount: count });
+}

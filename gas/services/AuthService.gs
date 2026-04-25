@@ -40,8 +40,6 @@ var AuthService = (function(){
     var bad = Validator.required_(action, req, ["userId","password"]);
     if (bad) return bad;
 
-    SessionRepository.deactivateExpired_();
-
     var user = UserRepository.findByUserId_(req.userId);
     var normalizedUserId = normalizeUserId_(req.userId);
     if (!user || !user.enabled) {
@@ -49,7 +47,9 @@ var AuthService = (function(){
       return fail_(action, "AUTH_REQUIRED", "Invalid user or password");
     }
 
-    if (String(user.password || "") !== String(req.password || "")) {
+    var reqHash = Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(req.password || "")));
+    var userPw = String(user.password || "");
+    if (userPw !== String(req.password || "") && userPw !== reqHash) {
       AccessLogService.log_("LOGIN_FAIL", user, action, "wrong_password", null);
       return fail_(action, "AUTH_REQUIRED", "Invalid user or password");
     }
@@ -71,8 +71,6 @@ var AuthService = (function(){
   }
 
   function requireSession_(req){
-    SessionRepository.deactivateExpired_();
-
     var sessionToken = req && req.st ? String(req.st) : "";
     if (!sessionToken) {
       return { ok: false, error: fail_("session", "AUTH_REQUIRED", "Session is required") };
