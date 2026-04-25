@@ -3,7 +3,7 @@ import { apiGet, apiPost, setAuthHandlers } from "./services/api.js";
 import { renderWorklog } from "./modules/worklog.js";
 import { renderReport }  from "./modules/report.js";
 import { renderInsights } from "./modules/insights.js";
-import { renderCalc }    from "./modules/calc.js";
+import { renderCalculators as renderCalc } from "./modules/calculators.js";
 import { renderReference } from "./modules/reference.js";
 import { getState, setState, subscribe } from "./store.js";
 import { getStoredSession, storeSession, clearStoredSession } from "./auth/session.js";

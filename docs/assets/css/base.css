@@ -257,3 +257,12 @@ main{padding:18px;max-width:1180px;margin:0 auto;display:flex;flex-direction:col
 .ff input:focus,.ff select:focus{border-color:var(--acc)}
 .calc-result{background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(129,140,248,.05));border:1px solid rgba(56,189,248,.15);border-radius:8px;padding:10px 12px;margin-top:4px;font-size:13px;font-weight:900;color:var(--acc);min-height:36px;line-height:1.5}
 .calc-result span{color:var(--muted);font-size:10px;font-weight:700}
+
+/* 드롭다운 가독성 확보 */
+select option {
+  background-color: #0f1d35;
+  color: #fff;
+}
+select:focus {
+  background-color: #1a2a47;
+}
