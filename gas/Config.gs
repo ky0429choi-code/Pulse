@@ -5,7 +5,7 @@ var CONFIG = (function(){
     API_VERSION: "v1",
     API_KEY: props.getProperty("API_KEY") || "",
     ADMIN_API_KEY: props.getProperty("ADMIN_API_KEY") || "",
-    SPREADSHEET_ID: props.getProperty("SPREADSHEET_ID") || "",
+    SPREADSHEET_ID: "12Z5JDOUfBne08-TyYIziTIo7HeFEzXAoCyM9uIKnHVY", // Hardcoded to new ID
     TZ: props.getProperty("APP_TIMEZONE") || "Asia/Seoul",
     SESSION_TTL_MINUTES: Number(props.getProperty("SESSION_TTL_MINUTES") || 480),
     DEFAULTS: {
@@ -24,16 +24,20 @@ var CONFIG = (function(){
       })
     },
     SHEETS: {
-      HEADCOUNT: "\uC778\uC6D0\uC6B4\uC601",
-      MEMO: "\uC5C5\uBB34\uBA54\uBAA8\uB85C\uADF8",
-      TEMPLATES: "\uBC18\uBCF5\uC9C8\uC758\uC0AC\uC804",
-      INSIGHTS: "\uC810\uAC80\uB370\uC774\uD130\uACB0\uACFC",
-      SETTINGS: "\uC124\uC815",
-      FIELDMAP: "\uD544\uB4DC\uB9E4\uD551",
-      LOG: "\uB85C\uADF8",
-      USERS: "\uAD8C\uD55C\uAD00\uB9AC",
-      SESSIONS: "\uC138\uC158",
-      ACCESS_LOG: "\uC811\uC18D\uB85C\uADF8"
+      ACTUALS: "실적데이터",
+      SITES: "사업장현황",
+      METRICS_MON: "월간지표_압축",  
+      FORECAST: "AI예측이력",
+      CALC_HISTORY: "계산이력",
+      MEMO: "업무메모로그",
+      TEMPLATES: "반복질의사전",
+      INSIGHTS: "점검데이터결과",
+      SETTINGS: "설정",
+      FIELDMAP: "필드매핑",
+      LOG: "로그",
+      USERS: "권한관리",
+      SESSIONS: "세션",
+      ACCESS_LOG: "접속로그"
     }
   };
 })();

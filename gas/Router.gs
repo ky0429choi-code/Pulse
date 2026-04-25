@@ -14,7 +14,11 @@ var Router = (function () {
     getMemoList: { method: "POST", handler: function(req){ return MemoService.getMemoList(req); } },
     getInsights: { method: "POST", handler: function(req){ return InsightService.getInsights(req); } },
     saveMemo: { method: "POST", handler: function(req){ return MemoService.saveMemo(req); } },
-    runAudit: { method: "POST", handler: function(req){ return InsightService.runAudit(req); } }
+    runAudit: { method: "POST", handler: function(req){ return InsightService.runAudit(req); } },
+    getSiteList: { method: "POST", handler: function(req){ return SiteRepository.getSiteList(req); } },
+    getDashboardMetrics: { method: "POST", handler: function(req){ return MetricsRepository.getDashboardMetrics(req); } },
+    calculateYield: { method: "POST", handler: function(req){ return CalculatorService.calculateYield_(req); } },
+    searchCalcHistory: { method: "POST", handler: function(req){ return CalculatorService.searchHistory_(req); } }
   };
 
   var ADMIN_ACTIONS = {

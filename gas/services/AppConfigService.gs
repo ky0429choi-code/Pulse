@@ -11,9 +11,13 @@ var AppConfigService = (function(){
 
   function getAppConfig(){
     var settings = getSettingsMap_();
-    var sites = parseJsonOr_(settings.SITE_LIST_JSON, parseJsonOr_(CONFIG.DEFAULTS.SITE_LIST_JSON, []));
+    var sitesRaw = [];
+    try { sitesRaw = SiteRepository.listAll_(); } catch(e) {}
+    var sites = sitesRaw.map(function(s){ return { siteId: s.siteName, siteName: s.siteName, region: s.region }; });
+    if (sites.length === 0) sites.push({ siteId: "NONE", siteName: "데이터 로딩 실패 (스프레드시트 확인)" });
+
     var featureFlags = parseJsonOr_(settings.FEATURE_FLAGS_JSON, parseJsonOr_(CONFIG.DEFAULTS.FEATURE_FLAGS_JSON, {}));
-    var defaultSiteId = settings.DEFAULT_SITE_ID || CONFIG.DEFAULTS.DEFAULT_SITE_ID;
+    var defaultSiteId = sites.length > 0 ? sites[0].siteId : "NONE";
 
     return ok_("getAppConfig", {
       defaultSiteId: defaultSiteId,

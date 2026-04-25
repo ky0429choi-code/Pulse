@@ -4,12 +4,12 @@ import { badge, card, kv, escapeHtml } from "../components/ui.js";
 
 export async function renderDashboard({ siteId, date }){
   const root = document.getElementById("p-dashboard");
-  root.innerHTML = card("Dashboard", "<div>Loading...</div>");
+  root.innerHTML = card("\uB300\uC2DC\uBCF4\uB4DC", "<div>\uB85C\uB529 \uC911...</div>");
 
   const cacheKey = `dash:${siteId}:${date}`;
   try{
     const res = await apiPost("getDashboardSummary", { siteId, date });
-    if(!res?.success) throw new Error(res?.message || "unknown");
+    if(!res?.success) throw new Error(res?.message || "\uC54C \uC218 \uC5C6\uB294 \uC624\uB958");
     cacheSet(cacheKey, res);
     root.innerHTML = buildDashboard(res.data);
   }catch(err){
@@ -18,7 +18,7 @@ export async function renderDashboard({ siteId, date }){
       root.innerHTML = buildDashboard(cached.data, true);
       return;
     }
-    root.innerHTML = card("Dashboard", `<div class="small">API error: ${escapeHtml(String(err.message || err))}</div>`);
+    root.innerHTML = card("\uB300\uC2DC\uBCF4\uB4DC", `<div class="small">API \uC624\uB958: ${escapeHtml(String(err.message || err))}</div>`);
   }
 }
 
@@ -31,20 +31,20 @@ function fmt(value, suffix = ""){
 function buildDashboard(data, isCached = false){
   const lunch = data.headcount?.lunch || { di:0, to:0 };
   const total = (lunch.di || 0) + (lunch.to || 0);
-  const cachedText = isCached ? `<div class="small">Showing cached data because the live request failed.</div>` : "";
+  const cachedText = isCached ? `<div class="small">\uC2E4\uC2DC\uAC04 \uB370\uC774\uD130\uB97C \uBD88\uB7EC\uC624\uC9C0 \uBABB\uD574 \uCEA1\uC2DC\uB41C \uB370\uC774\uD130\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4.</div>` : "";
   const siteName = escapeHtml(data.siteName || "-");
   const safeSiteId = escapeHtml(data.siteId || "-");
   const safeDate = escapeHtml(data.date || "-");
   const hero = `
     <div class="hero-card">
       <div>
-        <div class="eyebrow">Protected Summary</div>
+        <div class="eyebrow">\uC6B4\uC601 \uC694\uC57D</div>
         <div class="hero-title">${siteName} <span class="hero-sub">${safeSiteId}</span></div>
-        <div class="hero-meta">${safeDate} / lunch focused operational snapshot</div>
+        <div class="hero-meta">${safeDate} / \uC911\uC2DD \uC6B4\uC601 \uC9C0\uD45C \uD604\uD669</div>
         ${cachedText ? `<div style="margin-top:12px">${cachedText}</div>` : ""}
       </div>
       <div class="hero-number-wrap">
-        <div class="hero-number-label">Lunch Total</div>
+        <div class="hero-number-label">\uC911\uC2DD \uCD1D \uC2DD\uC218</div>
         <div class="hero-number">${fmt(total)}</div>
         <div class="hero-number-foot">${fmt(lunch.di)} DI / ${fmt(lunch.to)} TO</div>
       </div>
@@ -54,19 +54,19 @@ function buildDashboard(data, isCached = false){
   const top = `
     <div class="metric-grid">
       <div class="metric-tile accent">
-        <div class="metric-label">Lunch DI</div>
-        <div class="metric-value">${fmt(lunch.di, " meals")}</div>
+        <div class="metric-label">\uC911\uC2DD DI</div>
+        <div class="metric-value">${fmt(lunch.di, " \uC2DD")}</div>
       </div>
       <div class="metric-tile accent2">
-        <div class="metric-label">Lunch TO</div>
-        <div class="metric-value">${fmt(lunch.to, " meals")}</div>
+        <div class="metric-label">\uC911\uC2DD TO</div>
+        <div class="metric-value">${fmt(lunch.to, " \uC2DD")}</div>
       </div>
       <div class="metric-tile ok">
-        <div class="metric-label">Seat Count</div>
+        <div class="metric-label">\uC88C\uC11D \uC218</div>
         <div class="metric-value">${fmt(data.ops?.seatCount)}</div>
       </div>
       <div class="metric-tile warn">
-        <div class="metric-label">Lunch Staff</div>
+        <div class="metric-label">\uC911\uC2DD \uD22C\uC785\uC778\uC6D0</div>
         <div class="metric-value">${fmt(data.ops?.staffCountLunch)}</div>
       </div>
     </div>
@@ -76,20 +76,20 @@ function buildDashboard(data, isCached = false){
     <div class="stat-rack">
       <div class="stat-line">
         <div>
-          <div class="stat-label">Rotation (DI)</div>
+          <div class="stat-label">\uD68C\uC804\uC728 (DI \uC804\uC6A9)</div>
           <div class="stat-value">${fmt(data.kpi?.rotationDi)}</div>
         </div>
       </div>
       <div class="stat-line">
         <div>
-          <div class="stat-label">Rotation (DI+TO)</div>
+          <div class="stat-label">\uD68C\uC804\uC728 (DI+TO \uD3EC\uD568)</div>
           <div class="stat-value">${fmt(data.kpi?.rotationWithTo)}</div>
         </div>
         ${badge(data.status?.rotationLevel || "ok")}
       </div>
       <div class="stat-line">
         <div>
-          <div class="stat-label">Meals per Staff</div>
+          <div class="stat-label">\uC778\uC2DC\uB2F9 \uC2DD\uC218</div>
           <div class="stat-value">${fmt(data.kpi?.mealPerStaff)}</div>
         </div>
         ${badge(data.status?.staffLoadLevel || "ok")}
@@ -100,30 +100,30 @@ function buildDashboard(data, isCached = false){
   const compare = `
     <div class="compare-grid">
       <div class="compare-box">
-        <div class="compare-label">Vs Prev Day</div>
+        <div class="compare-label">\uC804\uC77C \uB300\uBE44</div>
         <div class="compare-value">${fmt(data.compare?.vsPrevDay)}</div>
       </div>
       <div class="compare-box">
-        <div class="compare-label">Vs Prev Week Avg</div>
+        <div class="compare-label">\uC804\uC8FC \uD3C9\uADE0 \uB300\uBE44</div>
         <div class="compare-value">${fmt(data.compare?.vsPrevWeekAvg)}</div>
       </div>
       <div class="compare-box">
-        <div class="compare-label">Vs Month Avg</div>
+        <div class="compare-label">\uC6D4 \uD3C9\uADE0 \uB300\uBE44</div>
         <div class="compare-value">${fmt(data.compare?.vsMonthAvg)}</div>
       </div>
     </div>
   `;
 
   const reference = [
-    kv("Prev Week Avg", fmt(data.compare?.prevWeekAvg)),
-    kv("Month Avg", fmt(data.compare?.monthAvg)),
-    kv("TO Corner Count", fmt(data.ops?.toCornerCount))
+    kv("\uC804\uC8FC \uD3C9\uADE0", fmt(data.compare?.prevWeekAvg)),
+    kv("\uC6D4 \uD3C9\uADE0", fmt(data.compare?.monthAvg)),
+    kv("TO \uCF54\uB108 \uC218", fmt(data.ops?.toCornerCount))
   ].join("");
 
   return [
     hero,
-    card("Today Summary", cachedText + top),
-    card("KPI", kpi),
-    card("Compare", compare + `<div class="hr"></div>` + reference)
+    card("\uAE08\uC77C \uC694\uC57D", cachedText + top),
+    card("\uD575\uC2EC \uC9C0\uD45C (KPI)", kpi),
+    card("\uC2E4\uC801 \uBE44\uAD50", compare + `<div class="hr"></div>` + reference)
   ].join("");
 }

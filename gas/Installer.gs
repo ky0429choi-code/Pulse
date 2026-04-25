@@ -1,6 +1,10 @@
 var Installer = (function(){
   function setupAll(){
-    ensureSheet_(CONFIG.SHEETS.HEADCOUNT);
+    ensureSheet_(CONFIG.SHEETS.ACTUALS);
+    ensureSheet_(CONFIG.SHEETS.SITES);
+    ensureSheet_(CONFIG.SHEETS.METRICS_MON);
+    ensureSheet_(CONFIG.SHEETS.FORECAST);
+    ensureSheet_(CONFIG.SHEETS.CALC_HISTORY);
     ensureSheet_(CONFIG.SHEETS.MEMO);
     ensureSheet_(CONFIG.SHEETS.TEMPLATES);
     ensureSheet_(CONFIG.SHEETS.INSIGHTS);
@@ -65,7 +69,7 @@ var Installer = (function(){
     if (sh.getLastRow() > 1) return;
 
     var rows = [];
-    [CONFIG.SHEETS.HEADCOUNT, CONFIG.SHEETS.MEMO, CONFIG.SHEETS.TEMPLATES, CONFIG.SHEETS.INSIGHTS, CONFIG.SHEETS.SETTINGS, CONFIG.SHEETS.LOG, CONFIG.SHEETS.USERS, CONFIG.SHEETS.SESSIONS, CONFIG.SHEETS.ACCESS_LOG].forEach(function(sname){
+    [CONFIG.SHEETS.ACTUALS, CONFIG.SHEETS.SITES, CONFIG.SHEETS.METRICS_MON, CONFIG.SHEETS.FORECAST, CONFIG.SHEETS.CALC_HISTORY, CONFIG.SHEETS.MEMO, CONFIG.SHEETS.TEMPLATES, CONFIG.SHEETS.INSIGHTS, CONFIG.SHEETS.SETTINGS, CONFIG.SHEETS.LOG, CONFIG.SHEETS.USERS, CONFIG.SHEETS.SESSIONS, CONFIG.SHEETS.ACCESS_LOG].forEach(function(sname){
       Schema.getSchema_(sname).forEach(function(f){
         rows.push([sname, f.logical, f.header, "TRUE", "default"]);
       });
@@ -178,3 +182,8 @@ var Installer = (function(){
 
   return { setupAll: setupAll, setupTriggers: setupTriggers };
 })();
+
+// UI에서 버튼으로 실행하기 위한 전역 래퍼 함수
+function runSetup() {
+  return Installer.setupAll();
+}

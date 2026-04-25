@@ -1,8 +1,8 @@
 var UserRepository = (function(){
-  var DEFAULT_HEADERS = ["userId","password","displayName","role","enabled","note"];
+
 
   function ensure_(){
-    SheetRepo.setHeaderIfEmpty_(CONFIG.SHEETS.USERS, DEFAULT_HEADERS);
+    SheetRepo.setHeaderIfEmpty_(CONFIG.SHEETS.USERS, Schema.defaultHeaders_(CONFIG.SHEETS.USERS));
   }
 
   function normalize_(value){

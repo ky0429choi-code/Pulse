@@ -1,17 +1,79 @@
 var Schema = (function(){
   var SCHEMAS = {};
 
-  SCHEMAS[CONFIG.SHEETS.HEADCOUNT] = [
-    { logical:"date",         header:"\uC77C\uC790", required:true },
-    { logical:"siteId",       header:"\uC0AC\uC5C5\uC7A5ID", required:true },
-    { logical:"siteName",     header:"\uC0AC\uC5C5\uC7A5\uBA85", required:false },
-    { logical:"meal",         header:"\uB07C\uB2C8", required:true },
-    { logical:"diCount",      header:"DI\uC2DD\uC218", required:true },
-    { logical:"toCount",      header:"TO\uC2DD\uC218", required:false },
-    { logical:"seatCount",    header:"\uC88C\uC11D\uC218", required:false },
-    { logical:"toCornerCount",header:"TO\uCF54\uB108\uC218", required:false },
-    { logical:"staffCount",   header:"\uC0AC\uC785\uC778\uC6D0", required:false },
-    { logical:"note",         header:"\uBE44\uACE0", required:false }
+  SCHEMAS[CONFIG.SHEETS.ACTUALS] = [
+    { logical:"date",    header:"날짜", required:true },
+    { logical:"region",  header:"지역", required:false },
+    { logical:"siteName",header:"사업장명", required:false },
+    { logical:"di_b",    header:"DI_조식", required:false },
+    { logical:"di_l",    header:"DI_중식", required:false },
+    { logical:"di_d",    header:"DI_석식", required:false },
+    { logical:"di_n",    header:"DI_야식", required:false },
+    { logical:"to_b",    header:"TO_조식", required:false },
+    { logical:"to_l",    header:"TO_중식", required:false },
+    { logical:"to_d",    header:"TO_석식", required:false },
+    { logical:"to_n",    header:"TO_야식", required:false },
+    { logical:"cost",    header:"재료비", required:false },
+    { logical:"note1",   header:"식사특이사항", required:false },
+    { logical:"note2",   header:"기타특이사항", required:false }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.SITES] = [
+    { logical:"region",      header:"지역", required:false },
+    { logical:"siteName",    header:"사업장명", required:true },
+    { logical:"dietitian",   header:"영양사", required:false },
+    { logical:"chef",        header:"조리사", required:false },
+    { logical:"seats",       header:"좌석수", required:false },
+    { logical:"corners",     header:"코너수", required:false },
+    { logical:"to_corners",  header:"TO_코너수", required:false },
+    { logical:"targetSales", header:"도전매출", required:false },
+    { logical:"targetProfit",header:"도전영업이익", required:false },
+    { logical:"targetRatio", header:"목표재료비", required:false }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.METRICS_MON] = [
+    { logical:"month",       header:"기준연월", required:true },
+    { logical:"region",      header:"지역", required:false },
+    { logical:"siteName",    header:"사업장명", required:true },
+    { logical:"workDays",    header:"조업일수", required:false },
+    { logical:"avg_di_b",    header:"일평균_조식", required:false },
+    { logical:"avg_di_l",    header:"일평균_중식", required:false },
+    { logical:"avg_di_d",    header:"일평균_석식", required:false },
+    { logical:"avg_di_n",    header:"일평균_야식", required:false },
+    { logical:"avg_to_b",    header:"일평균_TO조식", required:false },
+    { logical:"avg_to_l",    header:"일평균_TO중식", required:false },
+    { logical:"avg_to_d",    header:"일평균_TO석식", required:false },
+    { logical:"avg_to_n",    header:"일평균_TO야식", required:false },
+    { logical:"costRatio",   header:"재료비율", required:false },
+    { logical:"whiScore",    header:"WHI점수", required:false },
+    { logical:"turnover",    header:"회전율(중식_T/O포함)", required:false }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.FORECAST] = [
+    { logical:"createdAt",   header:"생성일시", required:false },
+    { logical:"baseDate",    header:"기준일", required:false },
+    { logical:"targetDate",  header:"예측대상일", required:true },
+    { logical:"region",      header:"지역", required:false },
+    { logical:"siteName",    header:"사업장명", required:true },
+    { logical:"meal",        header:"끼니", required:false },
+    { logical:"forecast",    header:"예측값", required:false },
+    { logical:"actual",      header:"실제값", required:false },
+    { logical:"errorRate",   header:"오차율(%)", required:false },
+    { logical:"accuracy",    header:"정확도(%)", required:false }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.CALC_HISTORY] = [
+    { logical:"calcId",      header:"계산ID", required:true },
+    { logical:"date",        header:"일자", required:true },
+    { logical:"userId",      header:"계정", required:true },
+    { logical:"itemName",    header:"품목명", required:true },
+    { logical:"calcType",    header:"계산유형", required:true },
+    { logical:"orderQty",    header:"발주량", required:true },
+    { logical:"lossRate",    header:"로스율(%)", required:true },
+    { logical:"perCapita",   header:"1인목표량", required:true },
+    { logical:"actualWeight",header:"실중량", required:true },
+    { logical:"servings",    header:"제공가능식수", required:true },
+    { logical:"reason",      header:"사유", required:false }
   ];
 
   SCHEMAS[CONFIG.SHEETS.MEMO] = [
@@ -64,12 +126,16 @@ var Schema = (function(){
   ];
 
   SCHEMAS[CONFIG.SHEETS.USERS] = [
-    { logical:"userId",      header:"userId", required:true },
-    { logical:"password",    header:"password", required:true },
-    { logical:"displayName", header:"displayName", required:false },
-    { logical:"role",        header:"role", required:false },
-    { logical:"enabled",     header:"enabled", required:false },
-    { logical:"note",        header:"note", required:false }
+    { logical:"userId",      header:"접속권한계정", required:true },
+    { logical:"role",        header:"권한등급", required:false },
+    { logical:"region",      header:"담당지역", required:false },
+    { logical:"siteId",      header:"소속사업장", required:false },
+    { logical:"password",    header:"개인비밀번호", required:true },
+    { logical:"displayName", header:"표시이름", required:false },
+    { logical:"jobTitle",    header:"표시직책", required:false },
+    { logical:"note",        header:"비고1", required:false },
+    { logical:"note2",       header:"비고2", required:false },
+    { logical:"note3",       header:"비고3", required:false }
   ];
 
   SCHEMAS[CONFIG.SHEETS.SESSIONS] = [

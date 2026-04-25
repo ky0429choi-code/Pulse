@@ -23,7 +23,7 @@ async function boot(){
   initTabs();
   wireAuthUi_();
   renderCalculators();
-  renderReference();
+  // reference is now dynamic, so it is loaded via refreshAll
   subscribe(onStateChange_);
   await restoreSession_();
 }
@@ -190,6 +190,8 @@ async function refreshAll(state = getState(), token = ++refreshToken){
   await renderInsights({ siteId });
   if (token !== refreshToken) return;
   await renderMemo({ siteId, date });
+  if (token !== refreshToken) return;
+  await renderReference({ siteId, date });
 }
 
 function applyUserUi_(user, expiresAt){

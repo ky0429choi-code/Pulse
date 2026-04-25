@@ -5,7 +5,7 @@ import { getState, setState } from "../store.js";
 
 export async function renderInsights({ siteId }){
   const root = document.getElementById("p-insights");
-  root.innerHTML = card("Insights", "<div>Loading...</div>");
+  root.innerHTML = card("\uC810\uAC80 \uB370\uC774\uD130 (\uC778\uC0AC\uC774\uD2B8)", "<div>\uB85C\uB529 \uC911...</div>");
 
   try{
     const res = await apiPost("getInsights", { siteId, period:"14d" });
@@ -31,18 +31,18 @@ export async function renderInsights({ siteId }){
       </div>
     `).join("");
 
-    root.innerHTML = card("Insights", `
-      <button class="btn" id="runAuditBtn" style="width:100%">Run Audit</button>
-      <div class="small" style="margin-top:8px">Signed-in users can refresh audit results and inspect the latest findings.</div>
+    root.innerHTML = card("\uC810\uAC80 \uB370\uC774\uD130 (\uC778\uC0AC\uC774\uD2B8)", `
+      <button class="btn" id="runAuditBtn" style="width:100%">\uC810\uAC80 \uB370\uC774\uD130 \uC0C8\uB85C\uACE0\uCE68</button>
+      <div class="small" style="margin-top:8px">\uC778\uAC00\uB41C \uC0AC\uC6A9\uC790\uB294 \uCD5C\uC2E0 \uC810\uAC80 \uACB0\uACFC\uB97C \uC2E4\uC2DC\uAC04\uC73C\uB85C \uBD88\uB7EC\uC62C \uC218 \uC788\uC2B5\uB2C8\uB2E4.</div>
       <div class="hr"></div>
       ${metaHtml}
-      ${list || "<div class='small'>No insight items.</div>"}
+      ${list || "<div class='small'>\uC810\uAC80 \uB0B4\uC5ED\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.</div>"}
     `);
 
     document.getElementById("runAuditBtn")?.addEventListener("click", async ()=>{
       try{
         const out = await apiPost("runAudit", { siteId, scope:"recent", period:"14d" });
-        if(!out?.success) throw new Error(out?.message || "runAudit failed");
+        if(!out?.success) throw new Error(out?.message || "\uC810\uAC80 \uC2E4\uD589 \uC2E4\uD328");
         const state = getState();
         setState({ siteId: state.siteId, date: state.date });
       }catch(err){
@@ -50,6 +50,6 @@ export async function renderInsights({ siteId }){
       }
     });
   }catch(err){
-    root.innerHTML = card("Insights", `<div class="small">API error: ${escapeHtml(String(err.message || err))}</div>`);
+    root.innerHTML = card("\uC810\uAC80 \uB370\uC774\uD130 (\uC778\uC0AC\uC774\uD2B8)", `<div class="small">API \uC624\uB958: ${escapeHtml(String(err.message || err))}</div>`);
   }
 }
