@@ -8,6 +8,7 @@ var CONFIG = (function(){
     SPREADSHEET_ID: "12Z5JDOUfBne08-TyYIziTIo7HeFEzXAoCyM9uIKnHVY", // Hardcoded to new ID
     TZ: props.getProperty("APP_TIMEZONE") || "Asia/Seoul",
     SESSION_TTL_MINUTES: Number(props.getProperty("SESSION_TTL_MINUTES") || 480),
+    CALENDAR_ID: props.getProperty("CALENDAR_ID") || "primary",
     DEFAULTS: {
       DEFAULT_SITE_ID: "H2",
       SITE_LIST_JSON: JSON.stringify([

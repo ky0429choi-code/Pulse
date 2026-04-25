@@ -50,6 +50,7 @@ function _buildShell(date) {
           ${CATEGORIES.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}
         </select>
         <button class="btn btn-ghost" id="wl-search-btn">조회</button>
+        <button class="btn btn-ghost" id="wl-cal-sync-btn" title="\uAD6C\uAE00 \uCE98\uB9B0\uB354\uC5D0\uC11C \uAC00\uC9C8\uC624\uAE30">\uD83D\uDDD3\uFE0F \uBD88\uB7EC\uC624\uAE30</button>
         <button class="btn btn-ghost" id="wl-print-btn">인쇄</button>
       </div>
     </div>
@@ -72,8 +73,36 @@ function _wireEvents(siteId, date) {
       _loadList(siteId, { dateFrom: from, dateTo: to, category: cat });
     });
 
+  document.getElementById("wl-cal-sync-btn")
+    ?.addEventListener("click", () => _handleSyncCalendar(siteId, date));
+
   document.getElementById("wl-print-btn")
     ?.addEventListener("click", () => window.print());
+}
+
+async function _handleSyncCalendar(siteId, date) {
+  const btn = document.getElementById("wl-cal-sync-btn");
+  btn.disabled = true;
+  btn.textContent = "\uB3D9\uAE20\uD654 \uC911...";
+  try {
+    const res = await apiPost("syncFromCalendar", { siteId, date });
+    if (!res?.success) throw new Error(res?.message || "\uD328\uCE58 \uC2E4\uD328");
+    const events = res.data?.events || [];
+    if (!events.length) {
+      alert("\uD574\uB2F9 \uB0A0\uC790\uC5D0 \uAD6C\uAE00 \uCE98\uB9B0\uB354 \uC77C\uC815\uC774 \uC5C6\uC2B5\uB2C8\uB2E4.");
+      return;
+    }
+    // \uBD88\uB7EC\uC628 \uC77C\uC815\uC744 \uC5C5\uBB34\uC77C\uC9C0 \uC785\uB825\uB780\uC5D0 \uC790\uB3D9\uC73C\uB85C \uCC44\uC6D4\uC90C
+    const first = events[0];
+    document.getElementById("wl-content").value = `[\uCE98\uB9B0\uB354 \uC5F0\uB3D9] ${first.title}\n${first.description || ''}`;
+    document.getElementById("wl-category").value = "\uC6B4\uC601";
+    alert(`\uCE98\uB9B0\uB354\uC5D0\uC11C [${events.length}]\uAC1C\uC758 \uC77C\uC815\uC744 \uAC00\uC9C8\uC624\uACE0 \uCCAB \uBC88\uC9F8 \uC77C\uC815\uC744 \uC785\uB825\uB780\uC5D0 \uCC44\uC6E0\uC2B5\uB2C8\uB2E4. \uC800\uC7A5 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uD655\uC815\uD558\uC138\uC694.`);
+  } catch (err) {
+    alert("\uC624\uB958: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "\uD83D\uDDD3\uFE0F \uBD88\uB7EC\uC624\uAE30";
+  }
 }
 
 // ── 저장 ────────────────────────────────────────────────────

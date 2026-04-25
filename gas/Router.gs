@@ -25,6 +25,7 @@ var Router = (function () {
     saveWorklog: { method: "POST", handler: function(req){ return WorklogService.saveWorklog(req); } },
     updateWorklog: { method: "POST", handler: function(req){ return WorklogService.updateWorklog(req); } },
     deleteWorklog: { method: "POST", handler: function(req){ return WorklogService.deleteWorklog(req); } },
+    syncFromCalendar: { method: "POST", handler: function(req){ return WorklogService.syncFromCalendar(req); } },
 
     // Report Additions
     getReportList: { method: "POST", handler: function(req){ return ReportService.getReportList(req); } },

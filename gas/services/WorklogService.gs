@@ -40,6 +40,14 @@ var WorklogService = (function () {
       createdAt: now
     };
     WorklogRepository.save_(rec);
+    
+    // \uAD6C\uAE00 \uCE98\uB9B0\uB354 \uC790\uB3D9 \uB3D9\uAE30\uD654 \uD638\uCD9C
+    try {
+      CalendarService.syncWorklogToCalendar(rec);
+    } catch(e) {
+      Logger.log("Calendar auto-sync skipped: " + e.toString());
+    }
+
     return rec;
   }
 
@@ -70,6 +78,12 @@ var WorklogService = (function () {
     getWorklogList: getWorklogList,
     saveWorklog   : saveWorklog,
     updateWorklog : updateWorklog,
-    deleteWorklog : deleteWorklog
+    deleteWorklog : deleteWorklog,
+    syncFromCalendar: function(req) {
+      Validator.required_("syncFromCalendar", req, ["siteId", "date"]);
+      var events = CalendarService.getEventsFromCalendar(req.date);
+      // \uD604\uC7AC \uC2DC\uD2B8\uC5D0 \uC774\uBBF8 \uB4F1\uB85D\uB41C \uC77C\uC815\uC774\uC9C0 \uD655\uC778 \uD644 \uC5C6\uB294 \uAC83\uB9CC \uC81C\uC548 \uB610\uB294 \uC790\uB3D9 \uC800\uC7A5 \uB85C\uC9C1 \uCD94\uAC00 \uAC00\uB2A5
+      return { events: events };
+    }
   };
 })();
