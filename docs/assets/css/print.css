@@ -1,0 +1,144 @@
+/* ============================================================
+   print.css
+   base.css 하단에 병합하거나 index.html 에서 별도 link 추가:
+   <link rel="stylesheet" href="./assets/css/print.css" />
+   ============================================================ */
+
+@media print {
+  /* 기본 리셋 */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 11pt;
+  }
+
+  /* 숨길 요소 */
+  .login-overlay,
+  .watermark-layer,
+  .topbar,
+  .hero-strip,
+  .tab-row,
+  .btn,
+  #wl-input-card,
+  #rpt-preview-card .card-hdr button,
+  .wl-done-toggle,
+  .wl-delete-btn,
+  .calc-delete-btn,
+  .calc-load-btn,
+  #calc-preview-btn,
+  #calc-save-btn,
+  #calc-refresh-btn,
+  #calc-print-btn,
+  #wl-search-btn,
+  #wl-print-btn,
+  #wl-save-btn,
+  #rpt-generate-btn,
+  #rpt-refresh-btn,
+  #rpt-copy-btn,
+  #rpt-print-btn,
+  #rpt-finalize-btn,
+  .no-print-empty {
+    display: none !important;
+  }
+
+  /* 인쇄 헤더 */
+  .print-header {
+    display: block !important;
+    margin-bottom: 16pt;
+    border-bottom: 1.5pt solid #111;
+    padding-bottom: 8pt;
+  }
+
+  .print-header .site-name {
+    font-size: 14pt;
+    font-weight: 700;
+  }
+
+  .print-header .print-meta {
+    font-size: 9pt;
+    color: #555;
+    margin-top: 2pt;
+  }
+
+  /* 패널 */
+  .panel { display: block !important; }
+  .panel:not(.on) { display: none !important; }
+
+  /* 카드 */
+  .card {
+    background: #fff !important;
+    border: 0.5pt solid #ccc !important;
+    border-radius: 4pt !important;
+    box-shadow: none !important;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .card-hdr {
+    background: #f4f4f4 !important;
+    padding: 6pt 10pt !important;
+    border-bottom: 0.5pt solid #ccc !important;
+  }
+
+  .card-hdr h2 {
+    font-size: 10pt !important;
+    color: #111 !important;
+  }
+
+  .card-body {
+    padding: 10pt !important;
+    color: #111 !important;
+  }
+
+  /* 텍스트 */
+  .small, .muted, [style*="color:var(--muted)"] {
+    color: #555 !important;
+  }
+
+  /* 업무일지 아이템 */
+  .wl-item {
+    border-bottom: 0.3pt solid #ddd !important;
+    padding: 6pt 0 !important;
+  }
+
+  /* 인당량 테이블 */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 0.3pt solid #ccc !important;
+    padding: 4pt 6pt !important;
+    font-size: 9pt !important;
+    color: #111 !important;
+  }
+
+  /* 보고서 미리보기 */
+  #rpt-preview-body {
+    font-size: 10pt !important;
+    color: #111 !important;
+    white-space: pre-wrap !important;
+  }
+
+  /* A4 레이아웃 */
+  @page {
+    size: A4 portrait;
+    margin: 20mm 15mm;
+  }
+
+  main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 화면에서 숨길 인쇄 전용 헤더 */
+.print-header {
+  display: none;
+}

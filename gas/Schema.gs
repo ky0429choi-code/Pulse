@@ -162,6 +162,42 @@ var Schema = (function(){
     { logical:"payload",    header:"payload", required:false }
   ];
 
+  SCHEMAS[CONFIG.SHEETS.WORKLOG] = [
+    { logical: "logId", header: "logId", required: true },
+    { logical: "siteId", header: "siteId", required: true },
+    { logical: "date", header: "date", required: true },
+    { logical: "category", header: "category", required: true },
+    { logical: "content", header: "content", required: false },
+    { logical: "isDone", header: "isDone", required: true },
+    { logical: "tags", header: "tags", required: false },
+    { logical: "createdAt", header: "createdAt", required: true }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.REPORT] = [
+    { logical: "reportId", header: "reportId", required: true },
+    { logical: "siteId", header: "siteId", required: true },
+    { logical: "date", header: "date", required: true },
+    { logical: "title", header: "title", required: true },
+    { logical: "category", header: "category", required: true },
+    { logical: "body", header: "body", required: false },
+    { logical: "status", header: "status", required: true },
+    { logical: "createdAt", header: "createdAt", required: true }
+  ];
+
+  SCHEMAS[CONFIG.SHEETS.CALC] = [
+    { logical: "calcId", header: "calcId", required: true },
+    { logical: "siteId", header: "siteId", required: true },
+    { logical: "menuName", header: "menuName", required: true },
+    { logical: "itemName", header: "itemName", required: true },
+    { logical: "portionG", header: "portionG", required: true },
+    { logical: "usageKg", header: "usageKg", required: true },
+    { logical: "headcount", header: "headcount", required: true },
+    { logical: "yieldG", header: "yieldG", required: true },
+    { logical: "baselineG", header: "baselineG", required: true },
+    { logical: "feedback", header: "feedback", required: false },
+    { logical: "createdAt", header: "createdAt", required: true }
+  ];
+
   var FIELDMAP_HEADER = ["sheet","logical","header","enabled","note"];
 
   var _fieldMapCache = null;
@@ -230,3 +266,56 @@ var Schema = (function(){
     buildIndexMap_: buildIndexMap_
   };
 })();
+
+// -- Constants for Installer addition --
+var SCHEMA_WORKLOG_HEADERS = [
+  "logId", "siteId", "date", "category",
+  "content", "isDone", "tags", "createdAt"
+];
+
+var SCHEMA_REPORT_HEADERS = [
+  "reportId", "siteId", "date", "title",
+  "category", "body", "status", "createdAt"
+];
+
+var SCHEMA_CALC_HEADERS = [
+  "calcId", "siteId", "menuName", "itemName",
+  "portionG", "usageKg", "headcount", "yieldG",
+  "baselineG", "feedback", "createdAt"
+];
+
+var FIELDMAP_WORKLOG = [
+  ["logId",     "logId",     "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["siteId",    "siteId",    "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["date",      "date",      "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["category",  "category",  "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["content",   "content",   "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["isDone",    "isDone",    "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["tags",      "tags",      "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"],
+  ["createdAt", "createdAt", "\uC5C5\uBB34\uC77C\uC9C0", "TRUE"]
+];
+
+var FIELDMAP_REPORT = [
+  ["reportId",  "reportId",  "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["siteId",    "siteId",    "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["date",      "date",      "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["title",     "title",     "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["category",  "category",  "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["body",      "body",      "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["status",    "status",    "\uBCF4\uACE0\uC11C", "TRUE"],
+  ["createdAt", "createdAt", "\uBCF4\uACE0\uC11C", "TRUE"]
+];
+
+var FIELDMAP_CALC = [
+  ["calcId",    "calcId",    "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["siteId",    "siteId",    "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["menuName",  "menuName",  "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["itemName",  "itemName",  "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["portionG",  "portionG",  "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["usageKg",   "usageKg",   "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["headcount", "headcount", "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["yieldG",    "yieldG",    "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["baselineG", "baselineG", "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["feedback",  "feedback",  "\uC778\uB2F9\uB7C9", "TRUE"],
+  ["createdAt", "createdAt", "\uC778\uB2F9\uB7C9", "TRUE"]
+];

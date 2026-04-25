@@ -18,7 +18,25 @@ var Router = (function () {
     getSiteList: { method: "POST", handler: function(req){ return SiteRepository.getSiteList(req); } },
     getDashboardMetrics: { method: "POST", handler: function(req){ return MetricsRepository.getDashboardMetrics(req); } },
     calculateYield: { method: "POST", handler: function(req){ return CalculatorService.calculateYield_(req); } },
-    searchCalcHistory: { method: "POST", handler: function(req){ return CalculatorService.searchHistory_(req); } }
+    searchCalcHistory: { method: "POST", handler: function(req){ return CalculatorService.searchHistory_(req); } },
+    
+    // Worklog Additions
+    getWorklogList: { method: "POST", handler: function(req){ return WorklogService.getWorklogList(req); } },
+    saveWorklog: { method: "POST", handler: function(req){ return WorklogService.saveWorklog(req); } },
+    updateWorklog: { method: "POST", handler: function(req){ return WorklogService.updateWorklog(req); } },
+    deleteWorklog: { method: "POST", handler: function(req){ return WorklogService.deleteWorklog(req); } },
+
+    // Report Additions
+    getReportList: { method: "POST", handler: function(req){ return ReportService.getReportList(req); } },
+    generateReport: { method: "POST", handler: function(req){ return ReportService.generateReport(req); } },
+    finalizeReport: { method: "POST", handler: function(req){ return ReportService.finalizeReport(req); } },
+    deleteReport: { method: "POST", handler: function(req){ return ReportService.deleteReport(req); } },
+
+    // Calc Additions
+    getCalcList: { method: "POST", handler: function(req){ return CalcService.getCalcList(req); } },
+    saveCalc: { method: "POST", handler: function(req){ return CalcService.saveCalc(req); } },
+    calculateOnly: { method: "POST", handler: function(req){ return CalcService.calculateOnly(req); } },
+    deleteCalc: { method: "POST", handler: function(req){ return CalcService.deleteCalc(req); } }
   };
 
   var ADMIN_ACTIONS = {

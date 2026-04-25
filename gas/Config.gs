@@ -24,6 +24,9 @@ var CONFIG = (function(){
       })
     },
     SHEETS: {
+      WORKLOG: "\uC5C5\uBB34\uC77C\uC9C0",
+      REPORT: "\uBCF4\uACE0\uC11C",
+      CALC: "\uC778\uB2F9\uB7C9",
       ACTUALS: "실적데이터",
       SITES: "사업장현황",
       METRICS_MON: "월간지표_압축",  

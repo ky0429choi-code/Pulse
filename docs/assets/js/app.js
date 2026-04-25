@@ -1,10 +1,9 @@
 import { initTabs } from "./router.js";
 import { apiGet, apiPost, setAuthHandlers } from "./services/api.js";
-import { renderDashboard } from "./modules/dashboard.js";
-import { renderTemplates } from "./modules/templates.js";
+import { renderWorklog } from "./modules/worklog.js";
+import { renderReport }  from "./modules/report.js";
 import { renderInsights } from "./modules/insights.js";
-import { renderMemo } from "./modules/memo.js";
-import { renderCalculators } from "./modules/calculators.js";
+import { renderCalc }    from "./modules/calc.js";
 import { renderReference } from "./modules/reference.js";
 import { getState, setState, subscribe } from "./store.js";
 import { getStoredSession, storeSession, clearStoredSession } from "./auth/session.js";
@@ -22,8 +21,7 @@ async function boot(){
   setAuthHandlers({ onUnauthorized: handleUnauthorized_ });
   initTabs();
   wireAuthUi_();
-  renderCalculators();
-  // reference is now dynamic, so it is loaded via refreshAll
+  renderReference();
   subscribe(onStateChange_);
   await restoreSession_();
 }
@@ -179,19 +177,19 @@ async function onStateChange_(state){
   await refreshAll(state, token);
 }
 
-async function refreshAll(state = getState(), token = ++refreshToken){
-  const siteId = state.siteId;
-  const date = state.date;
+async function refreshAll(state = getState(), token = ++refreshToken) {
+  const { siteId, date } = state;
 
-  await renderDashboard({ siteId, date });
+  await renderWorklog({ siteId, date });
   if (token !== refreshToken) return;
-  await renderTemplates({ siteId, date });
+
+  await renderReport({ siteId, date });
   if (token !== refreshToken) return;
+
   await renderInsights({ siteId });
   if (token !== refreshToken) return;
-  await renderMemo({ siteId, date });
-  if (token !== refreshToken) return;
-  await renderReference({ siteId, date });
+
+  await renderCalc({ siteId });
 }
 
 function applyUserUi_(user, expiresAt){
@@ -205,6 +203,15 @@ function applyUserUi_(user, expiresAt){
   hintEl.textContent = `세션 만료: ${new Date(expiresAt).toLocaleString("ko-KR")}`;
 
   setState({ user: safeUser, expiresAt: expiresAt || "" });
+
+  // \uC778\uC1C4 \uD5E4\uB354 \uAC31\uC2E0
+  const state = getState();
+  const printSite = document.getElementById("printSiteName");
+  const printMeta = document.getElementById("printMeta");
+  if (printSite) printSite.textContent = state.siteId || "";
+  if (printMeta) printMeta.textContent =
+    (safeUser.displayName || safeUser.userId || "") + " \xB7 " +
+    new Date().toLocaleDateString("ko-KR");
 }
 
 function showLogin_(message = ""){

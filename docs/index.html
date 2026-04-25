@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Pulse</title>
   <link rel="stylesheet" href="./assets/css/base.css" />
+  <link rel="stylesheet" href="./assets/css/print.css" />
   <script src="./env.js"></script>
 </head>
 <body>
+  <div class="print-header" id="printHeader">
+    <div class="site-name" id="printSiteName"></div>
+    <div class="print-meta" id="printMeta"></div>
+  </div>
   <div class="login-overlay show" id="loginOverlay">
     <div class="login-card">
       <div class="login-brand">
@@ -79,21 +84,19 @@
     </section>
 
     <nav class="tab-row" id="tabs">
-      <button class="tab on" data-tab="dashboard">대시보드</button>
-      <button class="tab" data-tab="templates">템플릿</button>
-      <button class="tab" data-tab="insights">인사이트</button>
-      <button class="tab" data-tab="calc">계산기</button>
-      <button class="tab" data-tab="ref">레퍼런스</button>
-      <button class="tab" data-tab="memo">메모</button>
+      <button class="tab on" data-tab="worklog">\uC5C5\uBB34 \uC77C\uC9C0</button>
+      <button class="tab"    data-tab="report">\uBCF4\uACE0\uC11C</button>
+      <button class="tab"    data-tab="insights">\uC810\uAC80 \uACB0\uACFC</button>
+      <button class="tab"    data-tab="calc">\uC778\uB2F9\uB7C9 \uACC4\uC0B0</button>
+      <button class="tab"    data-tab="ref">\uAE30\uC900\uD45C</button>
     </nav>
 
     <main>
-      <section class="panel on" id="p-dashboard"></section>
-      <section class="panel" id="p-templates"></section>
-      <section class="panel" id="p-insights"></section>
-      <section class="panel" id="p-calc"></section>
-      <section class="panel" id="p-ref"></section>
-      <section class="panel" id="p-memo"></section>
+      <section class="panel on" id="p-worklog"></section>
+      <section class="panel"    id="p-report"></section>
+      <section class="panel"    id="p-insights"></section>
+      <section class="panel"    id="p-calc"></section>
+      <section class="panel"    id="p-ref"></section>
     </main>
   </div>
 
