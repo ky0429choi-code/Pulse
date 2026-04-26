@@ -13,6 +13,7 @@ var Router = (function () {
     renderTemplate: { method: "POST", handler: function(req){ return TemplateService.renderTemplate(req); } },
     getMemoList: { method: "POST", handler: function(req){ return MemoService.getMemoList(req); } },
     getInsights: { method: "POST", handler: function(req){ return InsightService.getInsights(req); } },
+    getBriefing: { method: "POST", handler: function(req){ return JarvisService.getBriefing(req); } },
     saveMemo: { method: "POST", handler: function(req){ return MemoService.saveMemo(req); } },
     runAudit: { method: "POST", handler: function(req){ return InsightService.runAudit(req); } },
     getSiteList: { method: "POST", handler: function(req){ return SiteRepository.getSiteList(req); } },

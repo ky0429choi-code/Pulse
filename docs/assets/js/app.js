@@ -32,8 +32,9 @@ async function boot(){
 
 async function initNeuralCore_() {
   try {
-    // Pulse API에서 브리핑 및 스킬 정보 수집
-    const res = await apiGet("pulse/briefing");
+    const { siteId } = getState();
+    // Pulse API에서 브리핑 및 스킬 정보 수집 (getBriefing 액션으로 변경)
+    const res = await apiPost("getBriefing", { siteId });
     if (res && res.briefing) {
       showBriefing_(res.briefing);
       renderSkillTree_(res.skills);
