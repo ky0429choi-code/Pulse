@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse | Offline Performance Reporting System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 상단 헤더 -->
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo">PC</div>
+                <div class="brand">
+                    <span class="eyebrow">Secure Reporting Engine</span>
+                    <h1>Pulse Command Center</h1>
+                </div>
+            </div>
+            <div class="status-badge">OFFLINE MODE ACTIVE</div>
+        </header>
+
+        <main class="main-layout">
+            <!-- 좌측 패널: 데이터 입력 및 제어 -->
+            <aside class="panel-left glass">
+                <div class="pane-hdr">
+                    <h2 class="font-tech">DATA INGESTION</h2>
+                </div>
+                <div class="pane-body">
+                    <div class="field">
+                        <label>데이터 입력 (CSV/Tab 구분자)</label>
+                        <textarea id="rawInput" placeholder="엑셀 데이터를 이곳에 붙여넣으세요...&#10;(1열: 과제명, 2~9열: 상세 속성)"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>파일 업로드</label>
+                        <input type="file" id="fileInput" accept=".csv,.txt,.json">
+                    </div>
+                    <div class="hr"></div>
+                    <div class="field">
+                        <label>분석 기간 설정</label>
+                        <div class="filter-group">
+                            <select id="periodType">
+                                <option value="month">월별 분석</option>
+                                <option value="quarter">분기별 분석</option>
+                            </select>
+                            <select id="periodVal">
+                                <option value="1">1분기 / 1월</option>
+                                <option value="2">2분기 / 2월</option>
+                                <option value="3">3분기 / 3월</option>
+                                <option value="4">4분기 / 4월</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="processBtn">RUN ANALYTICS</button>
+                </div>
+            </aside>
+
+            <!-- 우측 패널: 시각화 및 리포트 -->
+            <section class="panel-right">
+                <div class="analytics-grid">
+                    <!-- 요약 카드 -->
+                    <div class="stat-card glass">
+                        <span class="label">TOTAL TASKS</span>
+                        <div class="value" id="stats-total">0</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="label">TOTAL HOURS</span>
+                        <div class="value" id="stats-hours">0</div>
+                    </div>
+                    <div class="stat-card glass">
+                        <span class="label">AVG INTENSITY</span>
+                        <div class="value" id="stats-avg">0%</div>
+                    </div>
+                </div>
+
+                <!-- 시각화 영역 -->
+                <div class="viz-row">
+                    <div class="viz-card glass">
+                        <h3 class="font-tech">CATEGORY DISTRIBUTION</h3>
+                        <div id="chart-pie" class="custom-pie"></div>
+                        <div id="pie-legend" class="legend"></div>
+                    </div>
+                    <div class="viz-card glass">
+                        <h3 class="font-tech">MONTHLY WORKLOAD</h3>
+                        <div id="chart-bar" class="custom-bar-container"></div>
+                    </div>
+                </div>
+
+                <!-- 자동 보고서 출력 -->
+                <div class="report-area glass">
+                    <div class="report-hdr">
+                        <h3 class="font-tech">AUTO-GENERATED REPORT</h3>
+                        <button class="btn-ghost" id="copyBtn">COPY TEXT</button>
+                    </div>
+                    <div class="report-content" id="reportOutput">
+                        데이터를 분석하면 이곳에 공식 보고서 초안이 생성됩니다.
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 하단 푸터 -->
+        <footer class="footer">
+            <div class="security-text">© 2026 Pulse. Pure Local Mode. All data resides in RAM.</div>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
