@@ -10,7 +10,7 @@ var HeadcountService = (function(){
     if (!rows.length) {
       return ok_(action, {
         siteId: req.siteId,
-        siteName: "",
+        siteName: "Pulse Dashboard",
         date: date,
         headcount: {},
         ops: {},
@@ -20,7 +20,7 @@ var HeadcountService = (function(){
       }, "no data");
     }
 
-    var siteName = rows[0].siteName || "";
+    var siteName = "Pulse Dashboard";
     var headcount = { breakfast:{}, lunch:{}, dinner:{}, late:{} };
     var ops = { seatCount: 0, toCornerCount: 1, staffCountLunch: 0 };
 
