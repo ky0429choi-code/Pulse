@@ -4,8 +4,10 @@ import { toast } from "../components/toast.js";
 
 let refDraft = "";
 
-export async function renderReference({ siteId, date }){
+export async function renderReference(state = {}){
+  const { siteId, date } = state;
   const root = document.getElementById("p-ref");
+  if (!root) return;
   
   const staticHtml = `
     ${card("\uC8FC\uB9D0 \uBC0F \uC57C\uAC04 \uC9C0\uC6D0\uAE08", `
@@ -34,6 +36,7 @@ export async function renderReference({ siteId, date }){
   document.getElementById("refContent").addEventListener("input", (e)=>{ refDraft = e.target.value; });
 
   async function loadRefs(){
+    if (!siteId) return;
     try{
        const res = await apiPost("getMemoList", { siteId, limit: 30 });
        const items = (res?.success ? (res.data?.items || []) : []).filter(x => x.category === "\uC9C0\uCE68");

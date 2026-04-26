@@ -180,6 +180,9 @@ async function refreshAll(state = getState(), token = ++refreshToken) {
   if (token !== refreshToken) return;
 
   await renderCalc({ siteId });
+  if (token !== refreshToken) return;
+
+  await renderReference(state);
 }
 
 function applyUserUi_(user, expiresAt){
