@@ -1,6 +1,6 @@
 var AuthService = (function(){
   function normalizeUserId_(value){
-    return String(value || "").trim().toLowerCase().replace(/@samsung\.com$/i, "");
+    return String(value || "").trim().toLowerCase().replace(/@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i, "");
   }
 
   function roleNorm_(role){

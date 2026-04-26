@@ -1,6 +1,6 @@
 // ============================================================
 // ReportService.gs
-// 삼성웰스토리 보고서 양식 GAS 템플릿 조합
+// Pulse 운영 보고서 양식 템플릿 조합
 // ============================================================
 
 var ReportService = (function () {
@@ -71,59 +71,64 @@ var ReportService = (function () {
     return siteId;
   }
 
+  var UI_STYLE = {
+    DIVIDER_BOLD: "══════════════════════════════════════",
+    DIVIDER_THIN: "─────────────────────────────────────"
+  };
+
+  /**
+   * 내부 헬퍼: 텍스트를 리스트 형식으로 변환
+   */
+  function _buildListItem_(content) {
+    if (!content) return [];
+    return String(content)
+      .split(/\n|\//)
+      .map(function(l){ return l.trim(); })
+      .filter(Boolean)
+      .map(function(l, i) { return "  " + (i + 1) + ") " + l; });
+  }
+
+  /**
+   * 본문 섹션 추가 헬퍼
+   */
+  function _addSection_(lines, title, content) {
+    if (!content || !content.trim()) return;
+    lines.push(title);
+    lines.push(UI_STYLE.DIVIDER_THIN);
+    lines.push.apply(lines, _buildListItem_(content));
+    lines.push("");
+  }
+
+  // ... (getReportList, generateReport, finalizeReport, deleteReport 생략) ...
+
   // ── 내부: 보고서 제목 조합 ──────────────────────────────────
   function _buildTitle_(category, siteName, date) {
     var map = { "일일": "일일 운영 보고서", "주간": "주간 운영 보고서", "월간": "월간 운영 보고서" };
-    return "[" + siteName + "] " + date + " " + (map[category] || "운영 보고서");
+    return "[" + siteName + "] " + (date || "현재") + " " + (map[category] || "운영 보고서");
   }
 
-  // ── 내부: 삼성웰스토리 양식 본문 조합 ────────────────────────
+  // ── 내부: 운영 보고서 양식 본문 조합 ────────────────────────
   function _buildBody_(category, siteName, req) {
     var lines = [];
-    var divider = "══════════════════════════════════════";
+    var reportTerm = (category || "일일") + " 보고서";
 
-    // 헤더
-    lines.push("삼성웰스토리 " + siteName + " " + (category === "일일" ? "일일" : category === "주간" ? "주간" : "월간") + " 운영 보고서");
-    lines.push(divider);
-    lines.push("■ 기준일: " + req.date);
-    lines.push("■ 사업장: " + siteName + " (" + req.siteId + ")");
-    lines.push("■ 보고유형: " + category + " 보고");
+    // 1. 헤더 영역
+    lines.push("Pulse " + siteName + " " + reportTerm);
+    lines.push(UI_STYLE.DIVIDER_BOLD);
+    lines.push("■ 기준일: " + (req.date || "-"));
+    lines.push("■ 사업장: " + siteName + " (" + (req.siteId || "-") + ")");
+    lines.push("■ 보고유형: " + category);
     lines.push("");
 
-    // 주요 내용
-    lines.push("1. 주요 운영 현황");
-    lines.push("─────────────────────────────────────");
-    var mainLines = String(req.mainContent || "").split(/\n|\//).map(function(l){ return l.trim(); }).filter(Boolean);
-    mainLines.forEach(function(l, i) {
-      lines.push("  " + (i + 1) + ") " + l);
-    });
-    lines.push("");
+    // 2. 섹션별 본문 (모듈화된 함수 사용)
+    _addSection_(lines, "1. 주요 운영 현황", req.mainContent);
+    _addSection_(lines, "2. 특이사항", req.specialNote);
+    _addSection_(lines, "3. 조치 및 향후 계획", req.actionPlan);
 
-    // 특이사항
-    if (req.specialNote && req.specialNote.trim()) {
-      lines.push("2. 특이사항");
-      lines.push("─────────────────────────────────────");
-      var noteLines = String(req.specialNote).split(/\n|\//).map(function(l){ return l.trim(); }).filter(Boolean);
-      noteLines.forEach(function(l, i) {
-        lines.push("  " + (i + 1) + ") " + l);
-      });
-      lines.push("");
-    }
-
-    // 조치 및 계획
-    if (req.actionPlan && req.actionPlan.trim()) {
-      lines.push("3. 조치 및 향후 계획");
-      lines.push("─────────────────────────────────────");
-      var planLines = String(req.actionPlan).split(/\n|\//).map(function(l){ return l.trim(); }).filter(Boolean);
-      planLines.forEach(function(l, i) {
-        lines.push("  " + (i + 1) + ") " + l);
-      });
-      lines.push("");
-    }
-
-    // 푸터
-    lines.push(divider);
-    lines.push("작성일시: " + new Date().toLocaleString("ko-KR", { timeZone: CONFIG.APP_TIMEZONE || "Asia/Seoul" }));
+    // 3. 푸터 영역
+    lines.push(UI_STYLE.DIVIDER_BOLD);
+    var tz = (typeof CONFIG !== 'undefined' && CONFIG.APP_TIMEZONE) ? CONFIG.APP_TIMEZONE : "Asia/Seoul";
+    lines.push("작성일시: " + new Date().toLocaleString("ko-KR", { timeZone: tz }));
     lines.push("본 보고서는 Pulse 운영 시스템에서 자동 생성되었습니다.");
 
     return lines.join("\n");

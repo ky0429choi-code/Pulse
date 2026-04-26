@@ -33,7 +33,8 @@ var ReportRepository = (function () {
   }
 
   function get_(reportId) {
-    var data = readAll_(SHEET);
+    _ensure();
+    var data = SheetRepo.readAll_(SHEET);
     var idx = _idx(data);
     var row = data.rows.filter(function (r) {
       return String(r[idx.reportId] || "") === String(reportId);
@@ -42,18 +43,20 @@ var ReportRepository = (function () {
   }
 
   function save_(rec) {
+    _ensure();
     var row = [
       rec.reportId, rec.siteId, rec.date, rec.title,
       rec.category, rec.body, rec.status || "draft", rec.createdAt
     ];
-    appendRow_(SHEET, row);
+    SheetRepo.appendRow_(SHEET, row);
     return rec;
   }
 
   function updateStatus_(reportId, status) {
-    var data = readAll_(SHEET);
+    _ensure();
+    var data = SheetRepo.readAll_(SHEET);
     var idx = _idx(data);
-    var ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+    var ss = SheetRepo.ss_();
     var sh = ss.getSheetByName(SHEET);
     for (var i = 0; i < data.rows.length; i++) {
       if (String(data.rows[i][idx.reportId] || "") === String(reportId)) {
@@ -65,9 +68,10 @@ var ReportRepository = (function () {
   }
 
   function delete_(reportId) {
-    var data = readAll_(SHEET);
+    _ensure();
+    var data = SheetRepo.readAll_(SHEET);
     var idx = _idx(data);
-    var ss = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+    var ss = SheetRepo.ss_();
     var sh = ss.getSheetByName(SHEET);
     for (var i = data.rows.length - 1; i >= 0; i--) {
       if (String(data.rows[i][idx.reportId] || "") === String(reportId)) {

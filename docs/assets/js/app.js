@@ -60,7 +60,7 @@ function normalizeLoginIdInput_(value){
   return String(value || "")
     .trim()
     .toLowerCase()
-    .replace(/@samsung\.com$/i, "");
+    .replace(/@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i, "");
 }
 
 function syncRememberedLoginId_(userId){

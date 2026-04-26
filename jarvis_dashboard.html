@@ -313,8 +313,7 @@ const TPL = {
       txt:`[케이터링 서비스 제안서 — B안 (프리미엄)]\n\n대상:\n일시:\n예상 인원: ____명\n\n메뉴 구성 (1인 기준):\n  - 메인 2종:\n  - 사이드 3종:\n  - 디저트:\n  - 음료:\n\n단가: ____원/인\n총 견적: ____원\n포함 서비스: 배송·세팅·전담 서빙·철수` },
     { ic:'📅', lb:'행사 운영 체크리스트',   sub:'사전·당일·사후',
       txt:`[행사 식음 운영 체크리스트]\n\n▸ 사전 (D-3)\n  □ 메뉴·수량 확정\n  □ 식재료 발주\n  □ 장비·용기 확인\n\n▸ 당일 (D-Day)\n  □ 조리 완료 시간:\n  □ 세팅 완료 시간:\n  □ 담당자 배치:\n\n▸ 사후\n  □ 잔식 처리\n  □ 결과 보고` },
-    { ic:'📧', lb:'부서 협조 공문',         sub:'행사·점검 요청',
-      txt:`수신: ___팀 ___님\n발신: DS 총무그룹 급식운영팀\n제목: [협조 요청] ___\n\n안녕하세요.\n급식운영팀 ___(___@samsung.com)입니다.\n\n아래와 같이 협조를 요청드립니다.\n\n▸ 목적:\n▸ 일시:\n▸ 장소:\n▸ 요청 사항:\n\n검토 후 회신 부탁드립니다.\n감사합니다.` },
+      txt:`[행무 협조 요청 공문]\n\n수신: ___팀 ___님\n발신: 운영지원그룹 급식운영팀\n제목: [협조 요청] ___\n\n안녕하세요.\n급식운영팀 ___(___@internal.id)입니다.\n\n아래와 같이 협조를 요청드립니다.\n\n▸ 목적:\n▸ 일시:\n▸ 장소:\n▸ 요청 사항:\n\n검토 후 회신 부탁드립니다.\n감사합니다.` },
   ]
 };
 
@@ -323,7 +322,7 @@ const TPL = {
 ================================================================ */
 const STATE = {
   tab: 'template',
-  memo: localStorage.getItem('ws_memo') || ''
+  memo: localStorage.getItem('p_memo') || ''
 };
 
 /* ================================================================
@@ -368,7 +367,7 @@ function copyTpl(txt) {
 
 function saveMemo() {
   const val = document.getElementById('memo-txt').value;
-  localStorage.setItem('ws_memo', val);
+  localStorage.setItem('p_memo', val);
   STATE.memo = val;
   const el = document.getElementById('memo-saved');
   el.style.opacity = '1';
