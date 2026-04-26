@@ -28,8 +28,15 @@ var SheetRepo = (function(){
     sh.getRange(1,1,1,header.length).setValues([header]);
   }
   function appendRow_(name, row){
-    var sh = ensureSheet_(name);
-    sh.appendRow(row);
+    var lock = LockService.getScriptLock();
+    try {
+      lock.waitLock(10000); // 10초간 대기
+      var sh = ensureSheet_(name);
+      sh.appendRow(row);
+      SpreadsheetApp.flush();
+    } finally {
+      lock.releaseLock();
+    }
   }
   function appendByIndexMap_(name, headerRow, indexMap, obj){
     var row = new Array(headerRow.length).fill("");

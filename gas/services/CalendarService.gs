@@ -13,15 +13,17 @@ var CalendarService = (function() {
       var cal = CalendarApp.getCalendarById(calId);
       if (!cal) return { success: false, message: "Calendar not found" };
 
-      var title = "[Pulse \uC5C5\uBB34] " + (rec.category || "\uAE30\uD0C0") + ": " + rec.content.substring(0, 30);
-      var description = "\uCE21\uC131\uC790: " + rec.userId + "\n\uD0DC\uADF8: " + (rec.tags || "") + "\n\n" + rec.content;
+      var content = rec.content || "";
+      var title = "[Pulse \uC5C5\uBB34] " + (rec.category || "\uAE30\uD0C0") + ": " + content.substring(0, 30);
+      var description = "\uCE21\uC131\uC790: " + (rec.userId || "Pulse") + "\n\uD0DC\uADF8: " + (rec.tags || "") + "\n\n" + content;
       
-      // \uAE30\uC874\uC5D0 \uC774\uBBF8 \uB4F1\uB85D\uB41C \uC77C\uC815\uC774 \uC788\uB294\uC9C0 \uD655\uC778 (\uBA54\uD0C0\uB370\uC774\uD130\uB85C logId \uD655\uC778 \uD611\uC758 \uD544\uC694\uD558\uC9C0\uB9CC \uC6B0\uC120 \uC2E0\uADDC \uC0DD\uC131)
       var eventDate = new Date(rec.date);
       var event = cal.createAllDayEvent(title, eventDate, {
         description: description,
-        location: rec.siteId
+        location: rec.siteId || ""
       });
+
+      event.setTag("logId", rec.logId);
 
       // \uC77C\uC815 ID\uB97C Worklog\uC5D0 \uD45C\uAE30\uD560 \uC218 \uC788\uB304\uBA74 \uCD54\uACE0!
       return { success: true, eventId: event.getId() };
@@ -48,7 +50,8 @@ var CalendarService = (function() {
       return {
         title: e.getTitle(),
         description: e.getDescription(),
-        id: e.getId()
+        id: e.getId(),
+        logId: e.getTag("logId")
       };
     });
   }
