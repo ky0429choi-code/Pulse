@@ -198,7 +198,7 @@ function applyUserUi_(user, expiresAt){
   const state = getState();
   const printSite = document.getElementById("printSiteName");
   const printMeta = document.getElementById("printMeta");
-  if (printSite) printSite.textContent = state.siteId || "";
+  if (printSite) printSite.textContent = "Pulse \uC6B4\uC601 \uB9AC\uD3EC\uD2B8";
   if (printMeta) printMeta.textContent =
     (safeUser.displayName || safeUser.userId || "") + " \xB7 " +
     new Date().toLocaleDateString("ko-KR");

@@ -104,7 +104,7 @@ var ReportService = (function () {
   // ── 내부: 보고서 제목 조합 ──────────────────────────────────
   function _buildTitle_(category, siteName, date) {
     var map = { "일일": "일일 운영 보고서", "주간": "주간 운영 보고서", "월간": "월간 운영 보고서" };
-    return "[" + siteName + "] " + (date || "현재") + " " + (map[category] || "운영 보고서");
+    return "[Pulse] " + (date || "현재") + " " + (map[category] || "운영 보고서");
   }
 
   // ── 내부: 운영 보고서 양식 본문 조합 ────────────────────────
@@ -113,10 +113,9 @@ var ReportService = (function () {
     var reportTerm = (category || "일일") + " 보고서";
 
     // 1. 헤더 영역
-    lines.push("Pulse " + siteName + " " + reportTerm);
+    lines.push("Pulse " + reportTerm);
     lines.push(UI_STYLE.DIVIDER_BOLD);
     lines.push("■ 기준일: " + (req.date || "-"));
-    lines.push("■ 사업장: " + siteName + " (" + (req.siteId || "-") + ")");
     lines.push("■ 보고유형: " + category);
     lines.push("");
 
