@@ -24,6 +24,69 @@ async function boot(){
   renderReference();
   subscribe(onStateChange_);
   await restoreSession_();
+  // [NEW] Neural Core Activation
+  if (getState().isReady) {
+    initNeuralCore_();
+  }
+}
+
+async function initNeuralCore_() {
+  try {
+    // Pulse API에서 브리핑 및 스킬 정보 수집
+    const res = await apiGet("pulse/briefing");
+    if (res && res.briefing) {
+      showBriefing_(res.briefing);
+      renderSkillTree_(res.skills);
+    }
+  } catch (err) {
+    console.warn("Neural sync failed:", err);
+  }
+}
+
+function showBriefing_(data) {
+  const overlay = document.getElementById("briefingOverlay");
+  const text = document.getElementById("briefingText");
+  if (!overlay || !text) return;
+
+  text.textContent = data.message;
+  
+  // 특이점 발견 시 시각적 강조
+  if (data.level === "WARN") {
+    text.style.color = "var(--warn)";
+  }
+
+  // 부드러운 등장
+  setTimeout(() => overlay.classList.add("visible"), 1000);
+}
+
+function renderSkillTree_(skills) {
+  const container = document.getElementById("skillTree");
+  if (!container || !skills) return;
+
+  // 기존 노드 제거 (CORE 제외)
+  const existingNodes = container.querySelectorAll(".skill-node:not(.core)");
+  existingNodes.forEach(n => n.remove());
+
+  skills.forEach(skill => {
+    const node = document.createElement("div");
+    node.className = `skill-node ${skill.status === "active" ? "active" : "locked"}`;
+    node.style.top = `${skill.pos.top}px`;
+    node.style.left = `${skill.pos.left}px`;
+    node.innerHTML = `<span class="font-tech" style="font-size: 8px;">${skill.name}</span>`;
+    
+    // 노드 간 연결선 (간단한 예시 버전)
+    if (skill.status === "active") {
+      const link = document.createElement("div");
+      link.className = "skill-link";
+      link.style.width = "100px";
+      link.style.top = "28px";
+      link.style.left = "28px";
+      link.style.transform = `rotate(${Math.random() * 360}deg)`;
+      node.appendChild(link);
+    }
+
+    container.appendChild(node);
+  });
 }
 
 function wireAuthUi_(){
@@ -137,6 +200,8 @@ async function completeLogin_(user, expiresAt){
   applyWatermark_(user);
   await loadConfig_();
   showApp_();
+  // 로그인 완료 후 신경망 초기화
+  initNeuralCore_();
 }
 
 async function loadConfig_(){

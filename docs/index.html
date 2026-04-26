@@ -88,6 +88,7 @@
       <button class="tab font-tech"    data-tab="insights">Insights</button>
       <button class="tab font-tech"    data-tab="calc">Analytics</button>
       <button class="tab font-tech"    data-tab="ref">Reference</button>
+      <button class="tab font-tech"    data-tab="neural">Core</button>
     </nav>
 
     <main>
@@ -96,6 +97,25 @@
       <section class="panel"    id="p-insights"></section>
       <section class="panel"    id="p-calc"></section>
       <section class="panel"    id="p-ref"></section>
+      
+      <!-- [NEW] Autonomous Skill Tree Section -->
+      <section class="panel" id="p-neural">
+        <div class="card glass-container">
+          <div class="card-hdr">
+            <h2 class="font-tech">Neural Skill Matrix</h2>
+          </div>
+          <div class="card-body">
+            <div class="eyebrow font-tech">Core Capabilities</div>
+            <div id="skillTree" class="skill-tree-hex">
+              <!-- Nodes will be injected via JS -->
+              <div class="skill-node active" style="top: 130px; left: 50%; transform: translateX(-50%);">
+                <span class="font-tech" style="font-size: 10px;">CORE</span>
+              </div>
+            </div>
+            <div class="login-note">자비스 코어의 성장 상태를 시각화한 신경망 맵입니다.</div>
+          </div>
+        </div>
+      </section>
     </main>
     <footer class="glass-container" style="padding:20px; text-align:center; margin: 20px; border-radius: 8px;">
       <div style="font-size:11px; color:var(--accent-cyan); font-weight:700; letter-spacing:1px; font-family:'Orbitron', sans-serif;">
@@ -111,6 +131,21 @@
   </div>
 
   <div class="copy-toast" id="toast">Done</div>
+
+  <!-- [NEW] Neural Briefing System Overlay -->
+  <div id="briefingOverlay" class="glass-container">
+    <div class="eyebrow font-tech">Neural Briefing</div>
+    <div class="briefing-alert">
+      <p id="briefingText" style="font-size: 13px; line-height: 1.6; color: var(--text-main);">
+        최적화 상태를 확인 중입니다...
+      </p>
+    </div>
+    <div id="briefingActions" style="display: flex; gap: 10px; margin-top: 15px;">
+      <button class="btn btn-primary font-tech" style="font-size: 9px; flex:1">Action: Optimize</button>
+      <button onclick="document.getElementById('briefingOverlay').classList.remove('visible')" 
+              class="btn font-tech" style="font-size: 9px; border-color: var(--err); color: var(--err);">Ignore</button>
+    </div>
+  </div>
 
   <script type="module" src="./assets/js/app.js"></script>
 </body>
