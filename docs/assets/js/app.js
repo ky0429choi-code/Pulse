@@ -28,7 +28,6 @@ async function boot(){
 
 function wireAuthUi_(){
   const dateInput = document.getElementById("dateInput");
-  const siteSelect = document.getElementById("siteSelect");
   const loginBtn = document.getElementById("loginBtn");
   const loginIdEl = document.getElementById("loginId");
   const passwordEl = document.getElementById("loginPassword");
@@ -37,7 +36,6 @@ function wireAuthUi_(){
 
   dateInput.value = todayISO();
   restoreRememberedLoginId_(loginIdEl, rememberEl);
-  siteSelect.addEventListener("change", ()=> setState({ siteId: siteSelect.value }));
   dateInput.addEventListener("change", ()=> setState({ date: dateInput.value }));
   loginBtn?.addEventListener("click", submitLogin_);
   passwordEl?.addEventListener("keydown", (event)=>{
@@ -143,17 +141,11 @@ async function completeLogin_(user, expiresAt){
 
 async function loadConfig_(){
   const cfg = await apiPost("getAppConfig", {});
-  if(!cfg?.success){
-    throw new Error("getAppConfig failed: " + (cfg?.message || "unknown"));
+  if(!cfg.success){
+    throw new Error("getAppConfig failed: " + (cfg.message || "unknown"));
   }
 
-  const siteSelect = document.getElementById("siteSelect");
-  siteSelect.innerHTML = (cfg.data.sites || []).map((site)=>
-    `<option value="${escapeHtml(site.siteId)}">${escapeHtml(site.siteName)}</option>`
-  ).join("");
-
-  const initialSiteId = cfg.data.defaultSiteId || cfg.data.sites?.[0]?.siteId || "";
-  siteSelect.value = initialSiteId;
+  const initialSiteId = cfg.data.defaultSiteId || cfg.data.sites?.[0]?.siteId || "H1";
 
   setState({
     appConfig: cfg.data,
@@ -166,11 +158,9 @@ async function loadConfig_(){
 let refreshToken = 0;
 
 async function onStateChange_(state){
-  if (!state.isReady || !state.siteId || !state.date) return;
+  if (!state.isReady || !state.date) return;
 
-  const siteSelect = document.getElementById("siteSelect");
   const dateInput = document.getElementById("dateInput");
-  if (siteSelect && siteSelect.value !== state.siteId) siteSelect.value = state.siteId;
   if (dateInput && dateInput.value !== state.date) dateInput.value = state.date;
 
   const token = ++refreshToken;

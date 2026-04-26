@@ -10,10 +10,9 @@ var CONFIG = (function(){
     SESSION_TTL_MINUTES: Number(props.getProperty("SESSION_TTL_MINUTES") || 480),
     CALENDAR_ID: props.getProperty("CALENDAR_ID") || "primary",
     DEFAULTS: {
-      DEFAULT_SITE_ID: "H2",
+      DEFAULT_SITE_ID: "P1",
       SITE_LIST_JSON: JSON.stringify([
-        { siteId: "H1", siteName: "Site H1" },
-        { siteId: "H2", siteName: "Site H2" }
+        { siteId: "P1", siteName: "Pulse Dashboard" }
       ]),
       FEATURE_FLAGS_JSON: JSON.stringify({
         memoSync: true,
