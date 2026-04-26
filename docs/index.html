@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Pulse</title>
+  <title>Pulse Command Center | AI Agent Office</title>
   <link rel="stylesheet" href="./assets/css/base.css" />
   <link rel="stylesheet" href="./assets/css/print.css" />
   <script src="./env.js"></script>
@@ -14,13 +14,13 @@
     <div class="print-meta" id="printMeta"></div>
   </div>
   <div class="login-overlay show" id="loginOverlay">
-    <div class="login-card">
+    <div class="login-card glass-container">
       <div class="login-brand">
-        <div class="login-mark">OP</div>
+        <div class="login-mark font-tech">PC</div>
         <div>
-          <div class="eyebrow">운영 콘솔</div>
-          <h1>Pulse</h1>
-          <p>인가된 사용자만 접근할 수 있습니다. 보호된 운영 데이터를 열려면 로그인하세요.</p>
+          <div class="eyebrow font-tech">Core Intelligence</div>
+          <h1>Pulse Command Center</h1>
+          <p>지휘 통제실에 오신 것을 환영합니다. 보안 프로토콜에 따라 인가된 장치에서만 운영 데이터에 접근할 수 있습니다.</p>
         </div>
       </div>
 
@@ -51,12 +51,12 @@
   <div class="watermark-layer" id="watermarkLayer" aria-hidden="true"></div>
 
   <div class="app-shell app-shell--locked" id="appShell">
-    <header class="topbar">
+    <header class="topbar glass-container">
       <div class="brand-block">
-        <div class="logo">OP</div>
+        <div class="logo font-tech">PC</div>
         <div>
-          <div class="eyebrow">운영 콘솔</div>
-          <div class="headline">Pulse</div>
+          <div class="eyebrow font-tech">Autonomous System</div>
+          <div class="headline">Pulse Command Center</div>
         </div>
       </div>
 
@@ -73,21 +73,21 @@
       </div>
     </header>
 
-    <section class="hero-strip">
+    <section class="hero-strip glass-container" style="margin: 20px; border-radius: 12px;">
       <div class="hero-copy">
-        <div class="eyebrow">보호된 워크스페이스</div>
-        <h2>일일 사업장 운영 및 즉각적인 조치를 위한 빠르고 직관적인 워크스페이스입니다.</h2>
-        <p id="sessionHint">현재 세션을 확인 중입니다.</p>
+        <div class="eyebrow font-tech">Secure Workspace Active</div>
+        <h2>실시간 운영 데이터 분석 및 에이전트 협업을 위한 통합 지휘 환경입니다.</h2>
+        <p id="sessionHint">보안 프로토콜을 확인 중입니다...</p>
       </div>
       <div class="hero-glow"></div>
     </section>
 
-    <nav class="tab-row" id="tabs">
-      <button class="tab on" data-tab="worklog">업무 일지</button>
-      <button class="tab"    data-tab="report">보고서</button>
-      <button class="tab"    data-tab="insights">점검 결과</button>
-      <button class="tab"    data-tab="calc">인당량 계산</button>
-      <button class="tab"    data-tab="ref">기준표</button>
+    <nav class="tab-row glass-container" id="tabs" style="margin: 0 20px; border-radius: 8px;">
+      <button class="tab on font-tech" data-tab="worklog">Worklog</button>
+      <button class="tab font-tech"    data-tab="report">Reports</button>
+      <button class="tab font-tech"    data-tab="insights">Insights</button>
+      <button class="tab font-tech"    data-tab="calc">Analytics</button>
+      <button class="tab font-tech"    data-tab="ref">Reference</button>
     </nav>
 
     <main>
@@ -97,12 +97,15 @@
       <section class="panel"    id="p-calc"></section>
       <section class="panel"    id="p-ref"></section>
     </main>
-    <footer style="padding:20px;text-align:center;border-top:1px solid var(--border);margin-top:20px">
-      <div style="font-size:11px;color:var(--err);font-weight:900;letter-spacing:.5px">
-        ⚠️ ABSOLUTE SECURITY: INTERNAL CONFIDENTIAL & OPERATIONAL DATA
+    <footer class="glass-container" style="padding:20px; text-align:center; margin: 20px; border-radius: 8px;">
+      <div style="font-size:11px; color:var(--accent-cyan); font-weight:700; letter-spacing:1px; font-family:'Orbitron', sans-serif;">
+        SYSTEM STATUS: ONLINE | ENCRYPTION: ACTIVE
       </div>
-      <div style="font-size:10px;color:var(--muted);margin-top:4px">
-        운영 현황 및 내부 기밀 자료의 외부 유출은 엄격히 금지됩니다. 모든 활동은 보안 로그에 기록됩니다.
+      <div style="font-size:10px; color:var(--text-dim); margin-top:8px;">
+        This workspace is protected by Pulse Security Protocols. Unauthorized access or data leakage is strictly prohibited.
+      </div>
+      <div style="font-size:9px; color:var(--text-dim); margin-top:4px; opacity: 0.5;">
+        © 2026 Pulse AI Agent Office. All operations are logged.
       </div>
     </footer>
   </div>

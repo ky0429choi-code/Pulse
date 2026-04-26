@@ -1,4 +1,4 @@
 window.ENV = {
-  API_BASE: "https://script.google.com/macros/s/AKfycbzt8bSW5jpRu_E1jLxBFS1f6Wpw-EtROXPe3iINOypSskcf0PxhvRgPVzEF2CgyCvJKvA/exec", // ADD YOUR APPS SCRIPT URL HERE
-  API_KEY: "" // ADD YOUR API KEY HERE
+  API_BASE: "https://script.google.com/macros/s/AKfycbwv9dQzeEtzffkgfkNmvj6c_DMLXlIc5IN8qpA0bPVCzbOYgTmnbNZAqo4Ml2h_gOgN/exec",
+  API_KEY: ""
 };
