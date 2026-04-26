@@ -5,3 +5,14 @@ node_modules/
 dist/
 coverage/
 *.log
+*.xlsx
+*.xls
+*.csv
+*.txt
+*data*
+# Sensitive
+.env
+env.js
+# Specific sensitive files
+excel_summary.txt
+read_excel.py
